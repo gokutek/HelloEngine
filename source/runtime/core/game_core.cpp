@@ -2,6 +2,9 @@
 #include "display.h"
 #include "utility.h"
 #include "graphics_core.h"
+#include "util/command_line_arg.h"
+
+#include <shellapi.h>
 
 namespace game_core
 {
@@ -101,6 +104,11 @@ namespace game_core
 
 	static void initialize_application(game_app& game)
     {
+        int argc = 0;
+        LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+        CommandLineArgs::Initialize(argc, argv);
+
+        graphics::initialize(true);
     }
 
     static void terminate_application(game_app& game)

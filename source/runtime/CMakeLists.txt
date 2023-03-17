@@ -16,6 +16,8 @@ add_library(lib_engine
     core/display.h
     core/display.cpp
     core/utility.h
+    core/util/command_line_arg.h
+    core/util/command_line_arg.cpp
     )
 
 
