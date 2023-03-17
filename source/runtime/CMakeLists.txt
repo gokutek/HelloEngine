@@ -18,6 +18,8 @@ add_library(lib_engine
     core/utility.h
     core/util/command_line_arg.h
     core/util/command_line_arg.cpp
+    core/command_list_manager.h
+    core/command_list_manager.cpp
     )
 
 
