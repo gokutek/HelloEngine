@@ -13,6 +13,9 @@ add_library(lib_engine
     core/game_core.cpp
     core/graphics_core.h
     core/graphics_core.cpp
+    core/display.h
+    core/display.cpp
+    core/utility.h
     )
 
 
