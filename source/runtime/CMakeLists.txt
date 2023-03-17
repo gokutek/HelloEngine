@@ -20,6 +20,10 @@ add_library(lib_engine
     core/util/command_line_arg.cpp
     core/command_list_manager.h
     core/command_list_manager.cpp
+    core/command_queue.h
+    core/command_queue.cpp
+    core/command_allocator_pool.h
+    core/command_allocator_pool.cpp
     )
 
 

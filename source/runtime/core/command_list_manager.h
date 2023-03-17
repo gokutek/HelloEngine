@@ -1,9 +1,6 @@
 #pragma once
 
-class command_queue
-{
-public:
-};
+#include "command_queue.h"
 
 class command_list_manager
 {
