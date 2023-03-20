@@ -31,7 +31,7 @@ protected:
 	uint32_t version_id_;
 };
 
-gpu_resource::gpu_resource() :
+inline gpu_resource::gpu_resource() :
 	usage_state_(D3D12_RESOURCE_STATE_COMMON),
 	transitioning_state_(D3D12_RESOURCE_STATES(-1)),
 	gpu_virtual_address_(D3D12_GPU_VIRTUAL_ADDRESS_NULL),
@@ -39,7 +39,7 @@ gpu_resource::gpu_resource() :
 {
 }
 
-gpu_resource::gpu_resource(ID3D12Resource* resource, D3D12_RESOURCE_STATES current_state) :
+inline gpu_resource::gpu_resource(ID3D12Resource* resource, D3D12_RESOURCE_STATES current_state) :
 	rhi_resource_(resource),
 	usage_state_(current_state),
 	transitioning_state_(D3D12_RESOURCE_STATES(-1)),
@@ -48,49 +48,49 @@ gpu_resource::gpu_resource(ID3D12Resource* resource, D3D12_RESOURCE_STATES curre
 {
 }
 
-gpu_resource::~gpu_resource()
+inline gpu_resource::~gpu_resource()
 {
 	destroy();
 }
 
-void gpu_resource::destroy()
+inline void gpu_resource::destroy()
 {
 	rhi_resource_ = nullptr;
 	gpu_virtual_address_ = D3D12_GPU_VIRTUAL_ADDRESS_NULL;
 	++version_id_;
 }
 
-ID3D12Resource* gpu_resource::get_resource()
+inline ID3D12Resource* gpu_resource::get_resource()
 {
 	return rhi_resource_.Get();
 }
 
-const ID3D12Resource* gpu_resource::get_resource() const
+inline const ID3D12Resource* gpu_resource::get_resource() const
 {
 	return rhi_resource_.Get();
 }
 
-ID3D12Resource** gpu_resource::get_address_of()
+inline ID3D12Resource** gpu_resource::get_address_of()
 {
 	return rhi_resource_.GetAddressOf();
 }
 
-D3D12_GPU_VIRTUAL_ADDRESS gpu_resource::get_gpu_virtual_address() const
+inline D3D12_GPU_VIRTUAL_ADDRESS gpu_resource::get_gpu_virtual_address() const
 {
 	return gpu_virtual_address_;
 }
 
-uint32_t gpu_resource::get_version_id() const
+inline uint32_t gpu_resource::get_version_id() const
 {
 	return version_id_;
 }
 
-ID3D12Resource* gpu_resource::operator->()
+inline ID3D12Resource* gpu_resource::operator->()
 {
 	return get_resource();
 }
 
-const ID3D12Resource* gpu_resource::operator->() const
+inline const ID3D12Resource* gpu_resource::operator->() const
 {
 	return get_resource();
 }
