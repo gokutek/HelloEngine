@@ -1,2 +1,2 @@
 ADD_SUBDIRECTORY(runtime)
-ADD_SUBDIRECTORY(model_viewer)
+ADD_SUBDIRECTORY(hello_world)

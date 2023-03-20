@@ -9,7 +9,7 @@ namespace game_core
 		virtual void cleanup() = 0;
 		virtual bool is_done() { return false; }
 
-		virtual void update(float DeltaTime) = 0;
+		virtual void update(float delta_time) = 0;
 		virtual void render_scene() = 0;
 	};
 
