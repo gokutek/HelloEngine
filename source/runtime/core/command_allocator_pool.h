@@ -8,15 +8,14 @@
 class command_allocator_pool
 {
 public:
-	command_allocator_pool(D3D12_COMMAND_LIST_TYPE Type);
+	command_allocator_pool(D3D12_COMMAND_LIST_TYPE type);
 	~command_allocator_pool();
 
 	void create(ID3D12Device* device);
 	void shutdown();
 
-
-	ID3D12CommandAllocator* request_allocator(uint64_t CompletedFenceValue);
-	void discard_allocator(uint64_t FenceValue, ID3D12CommandAllocator* Allocator);
+	ID3D12CommandAllocator* request_allocator(uint64_t completed_fence_value);
+	void discard_allocator(uint64_t fence_value, ID3D12CommandAllocator* allocator);
 
 	inline size_t size() const { return allocator_pool_.size(); }
 

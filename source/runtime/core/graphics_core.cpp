@@ -2,13 +2,13 @@
 #include "util/command_line_arg.h"
 #include "utility.h"
 
-static const uint32_t vendorID_Nvidia	= 0x10DE;
-static const uint32_t vendorID_AMD		= 0x1002;
-static const uint32_t vendorID_Intel	= 0x8086;
+static const uint32_t VENDOR_ID_NVIDIA	= 0x10DE;
+static const uint32_t VENDORID_AMD		= 0x1002;
+static const uint32_t VENDORID_INTEL	= 0x8086;
 
 static ID3D12Device* g_Device = nullptr;
-bool g_bTypedUAVLoadSupport_R11G11B10_FLOAT = false;
-bool g_bTypedUAVLoadSupport_R16G16B16A16_FLOAT = false;
+static bool g_bTypedUAVLoadSupport_R11G11B10_FLOAT = false;
+static bool g_bTypedUAVLoadSupport_R16G16B16A16_FLOAT = false;
 
 // 检查是否支持光线追踪?
 static bool IsDirectXRaytracingSupported(ID3D12Device* testDevice)
@@ -90,7 +90,7 @@ static int init_device(bool RequireDXRSupport)
 	uint32_t bUseWarpDriver = false;
 	CommandLineArgs::GetInteger(L"warp", bUseWarpDriver);
 
-	uint32_t desiredVendor = vendorID_Nvidia;
+	uint32_t desiredVendor = VENDOR_ID_NVIDIA;
 
 	// Temporary workaround because SetStablePowerState() is crashing
 	D3D12EnableExperimentalFeatures(0, nullptr, nullptr, nullptr);
@@ -265,6 +265,8 @@ static int check_feature_support()
 
 	return 0;
 }
+
+command_list_manager graphics::command_manager;
 
 void graphics::initialize(bool RequireDXRSupport)
 {

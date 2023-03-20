@@ -4,14 +4,20 @@
 #include <assert.h>
 #include <stdio.h>
 
+#ifdef _DEBUG
+#define ASSERT(condition, ...) assert(condition)
+
+#define WARN_ONCE_IF_NOT(condition, ...) assert(condition)
+
 #define ASSERT_SUCCEEDED(hr, ... ) \
         if (FAILED(hr)) { \
             assert(false); \
         }
-
-#define ASSERT(condition, ...) assert(condition)
-
-#define WARN_ONCE_IF_NOT(condition, ...)
+#else
+#define ASSERT(condition, ...) condition
+#define WARN_ONCE_IF_NOT(condition, ...) condition
+#define ASSERT_SUCCEEDED(hr, ... ) hr
+#endif
 
 namespace utility
 {
