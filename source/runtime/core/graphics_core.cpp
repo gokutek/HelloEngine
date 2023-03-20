@@ -6,7 +6,6 @@ static const uint32_t VENDOR_ID_NVIDIA	= 0x10DE;
 static const uint32_t VENDORID_AMD		= 0x1002;
 static const uint32_t VENDORID_INTEL	= 0x8086;
 
-static ID3D12Device* g_Device = nullptr;
 static bool g_bTypedUAVLoadSupport_R11G11B10_FLOAT = false;
 static bool g_bTypedUAVLoadSupport_R16G16B16A16_FLOAT = false;
 
@@ -126,22 +125,22 @@ static int init_device(bool RequireDXRSupport)
 
 			MaxSize = desc.DedicatedVideoMemory;
 
-			if (g_Device != nullptr)
-				g_Device->Release();
+			if (graphics::device != nullptr)
+				graphics::device->Release();
 
-			g_Device = pDevice.Detach();
+			graphics::device = pDevice.Detach();
 
 			utility::Printf(L"Selected GPU:  %s (%u MB)\n", desc.Description, desc.DedicatedVideoMemory >> 20);
 		}
 	}
 
-	if (RequireDXRSupport && !g_Device)
+	if (RequireDXRSupport && !graphics::device)
 	{
 		utility::Printf("Unable to find a DXR-capable device. Halting.\n");
 		__debugbreak();
 	}
 
-	if (g_Device == nullptr)
+	if (graphics::device == nullptr)
 	{
 		if (bUseWarpDriver)
 			utility::Print("WARP software adapter requested.  Initializing...\n");
@@ -149,7 +148,7 @@ static int init_device(bool RequireDXRSupport)
 			utility::Print("Failed to find a hardware adapter.  Falling back to WARP.\n");
 		ASSERT_SUCCEEDED(dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pAdapter)));
 		ASSERT_SUCCEEDED(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&pDevice)));
-		g_Device = pDevice.Detach();
+		graphics::device = pDevice.Detach();
 	}
 	else
 	{
@@ -172,7 +171,7 @@ static int init_device(bool RequireDXRSupport)
 
 		// Prevent the GPU from overclocking or underclocking to get consistent timings
 		if (DeveloperModeEnabled)
-			g_Device->SetStablePowerState(TRUE);
+			graphics::device->SetStablePowerState(TRUE);
 #endif
 	}
 
@@ -183,7 +182,7 @@ static int init_info_queue()
 {
 #if _DEBUG
 	ID3D12InfoQueue* pInfoQueue = nullptr;
-	if (SUCCEEDED(g_Device->QueryInterface(IID_PPV_ARGS(&pInfoQueue))))
+	if (SUCCEEDED(graphics::device->QueryInterface(IID_PPV_ARGS(&pInfoQueue))))
 	{
 		// Suppress whole categories of messages
 		//D3D12_MESSAGE_CATEGORY Categories[] = {};
@@ -238,7 +237,7 @@ static int check_feature_support()
 	// decode an R32_UINT representation of the same buffer.  This code determines if we get the hardware
 	// load support.
 	D3D12_FEATURE_DATA_D3D12_OPTIONS FeatureData = {};
-	if (SUCCEEDED(g_Device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &FeatureData, sizeof(FeatureData))))
+	if (SUCCEEDED(graphics::device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS, &FeatureData, sizeof(FeatureData))))
 	{
 		if (FeatureData.TypedUAVLoadAdditionalFormats)
 		{
@@ -247,7 +246,7 @@ static int check_feature_support()
 				DXGI_FORMAT_R11G11B10_FLOAT, D3D12_FORMAT_SUPPORT1_NONE, D3D12_FORMAT_SUPPORT2_NONE
 			};
 
-			if (SUCCEEDED(g_Device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))) &&
+			if (SUCCEEDED(graphics::device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))) &&
 				(Support.Support2 & D3D12_FORMAT_SUPPORT2_UAV_TYPED_LOAD) != 0)
 			{
 				g_bTypedUAVLoadSupport_R11G11B10_FLOAT = true;
@@ -255,7 +254,7 @@ static int check_feature_support()
 
 			Support.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 
-			if (SUCCEEDED(g_Device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))) &&
+			if (SUCCEEDED(graphics::device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))) &&
 				(Support.Support2 & D3D12_FORMAT_SUPPORT2_UAV_TYPED_LOAD) != 0)
 			{
 				g_bTypedUAVLoadSupport_R16G16B16A16_FLOAT = true;
@@ -267,6 +266,7 @@ static int check_feature_support()
 }
 
 command_list_manager graphics::command_manager;
+ID3D12Device* graphics::device = nullptr;
 
 void graphics::initialize(bool RequireDXRSupport)
 {

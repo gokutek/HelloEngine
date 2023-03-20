@@ -24,6 +24,8 @@ add_library(lib_engine
     core/command_queue.cpp
     core/command_allocator_pool.h
     core/command_allocator_pool.cpp
+    core/descriptor_heap.h
+    core/descriptor_heap.cpp
     )
 
 
