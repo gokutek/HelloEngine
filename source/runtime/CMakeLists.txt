@@ -9,6 +9,7 @@ INCLUDE_DIRECTORIES(${CMAKE_HOME_DIRECTORY}/source/runtime)
 # 运行时库
 # ==============================================================================
 add_library(lib_engine
+    core/pch.h
     core/game_core.h
     core/game_core.cpp
     core/graphics_core.h
@@ -26,8 +27,14 @@ add_library(lib_engine
     core/command_allocator_pool.cpp
     core/descriptor_heap.h
     core/descriptor_heap.cpp
+    core/gpu_resource.h
+    core/command_context.h
+    core/command_context.cpp
+    core/graphics_context.h
+    core/graphics_context.cpp
+    core/compute_context.h
+    core/compute_context.cpp
     )
-
 
 target_precompile_headers(lib_engine PRIVATE core/pch.h)
 
