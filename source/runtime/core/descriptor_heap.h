@@ -91,7 +91,7 @@ public:
 	descriptor_heap();
 	~descriptor_heap();
 
-	void create(const wchar_t* debug_heap_name, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t max_count);
+	void create(wchar_t const* debug_heap_name, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t max_count);
 	void destroy();
 
 	bool has_available_space(uint32_t count);

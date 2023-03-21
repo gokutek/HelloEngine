@@ -13,7 +13,7 @@ descriptor_heap::~descriptor_heap()
 {
 }
 
-void descriptor_heap::create(const wchar_t* debug_heap_name, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t max_count)
+void descriptor_heap::create(wchar_t const* debug_heap_name, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t max_count)
 {
 	heap_desc_.Type = type;
 	heap_desc_.NumDescriptors = max_count;

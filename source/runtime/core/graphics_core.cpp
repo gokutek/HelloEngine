@@ -265,8 +265,9 @@ static int check_feature_support()
 	return 0;
 }
 
-command_list_manager graphics::command_manager;
 ID3D12Device* graphics::device = nullptr;
+command_list_manager graphics::command_manager;
+command_context_manager graphics::context_manager;
 
 void graphics::initialize(bool RequireDXRSupport)
 {
