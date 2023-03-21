@@ -21,8 +21,15 @@
 
 namespace utility
 {
-	inline void Print(const char* msg) { OutputDebugStringA(msg); }
-	inline void Print(const wchar_t* msg) { OutputDebugString(msg); }
+	inline void Print(const char* msg)
+	{
+		OutputDebugStringA(msg);
+	}
+
+	inline void Print(const wchar_t* msg) 
+	{
+		OutputDebugString(msg);
+	}
 
 	inline void Printf(const char* format, ...)
 	{

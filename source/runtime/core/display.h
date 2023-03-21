@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h>
 
 namespace graphics
@@ -5,4 +7,3 @@ namespace graphics
 	extern uint32_t g_DisplayWidth;
 	extern uint32_t g_DisplayHeight;
 }
-
