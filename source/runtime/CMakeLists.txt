@@ -1,8 +1,8 @@
 # ==============================================================================
 # 公共头文件
 # ==============================================================================
-SET(THIRD_PARTY_ROOT_PATH ${CMAKE_HOME_DIRECTORY}/source/third_party/)
-INCLUDE_DIRECTORIES(${THIRD_PARTY_ROOT_PATH}/D3D12MemoryAllocator/include)
+SET(THIRD_PARTY_ROOT_PATH ${CMAKE_HOME_DIRECTORY}/third_party/)
+INCLUDE_DIRECTORIES(${THIRD_PARTY_ROOT_PATH}/DirectX-Headers/include/directx)
 INCLUDE_DIRECTORIES(${CMAKE_HOME_DIRECTORY}/source/runtime)
 
 # ==============================================================================
@@ -16,6 +16,8 @@ add_library(lib_engine
     core/graphics_core.cpp
     core/display.h
     core/display.cpp
+    core/color.h
+    core/color.cpp
     core/utility.h
     core/util/command_line_arg.h
     core/util/command_line_arg.cpp
@@ -28,6 +30,16 @@ add_library(lib_engine
     core/descriptor_heap.h
     core/descriptor_heap.cpp
     core/gpu_resource.h
+    core/pixel_buffer.h
+    core/pixel_buffer.cpp
+    core/color_buffer.h
+    core/color_buffer.cpp
+    core/depth_buffer.h
+    core/depth_buffer.cpp
+    core/gpu_buffer.h
+    core/gpu_buffer.cpp
+    core/buffer_manager.h
+    core/buffer_manager.cpp
     core/command_context.h
     core/command_context.cpp
     core/graphics_context.h
