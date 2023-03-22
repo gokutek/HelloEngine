@@ -28,7 +28,12 @@ add_library(lib_engine
     core/command_allocator_pool.h
     core/command_allocator_pool.cpp
     core/descriptor_heap.h
+    core/descriptor_heap.inl
     core/descriptor_heap.cpp
+    core/descriptor_allocator.h
+    core/descriptor_allocator.cpp
+    core/dynamic_descriptor_heap.h
+    core/dynamic_descriptor_heap.cpp
     core/gpu_resource.h
     core/pixel_buffer.h
     core/pixel_buffer.cpp
@@ -46,6 +51,8 @@ add_library(lib_engine
     core/graphics_context.cpp
     core/compute_context.h
     core/compute_context.cpp
+    core/command_context_manager.h
+    core/command_context_manager.cpp
     )
 
 target_precompile_headers(lib_engine PRIVATE core/pch.h)
