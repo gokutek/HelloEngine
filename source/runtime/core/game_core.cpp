@@ -3,126 +3,131 @@
 #include "utility.h"
 #include "graphics_core.h"
 #include "util/command_line_arg.h"
-
 #include <shellapi.h>
 
-namespace game_core
-{
-    HWND g_hWnd = nullptr;
+static HWND g_hWnd = nullptr;
+static graphics rhi;
 
-	static LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-	static void initialize_application(game_app& game);
-	static void terminate_application(game_app& game);
-	static bool update_application(game_app& game);
+/** 窗口过程 */
+static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_SIZE:
+        //TODO:
+        break;
+
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+
+    return 0;
+}
+
+static void initialize_application(game_module& game)
+{
+    int argc = 0;
+    LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
+    CommandLineArgs::Initialize(argc, argv);
+
+    rhi.initialize(true);
+
+    game.startup();
+}
+
+static void terminate_application(game_module& game)
+{
+    game.cleanup();
+}
+
+static bool update_application(game_module& game)
+{
+    //TODO: 输入
+
+    game.update(1.0f / 33);
+    game.render_scene();
+
+    //TODO: 后处理
+
+    //TODO: 渲染UI
+
+    return true;
+}
     
-	int run_application(game_app& app, const wchar_t* className, HINSTANCE hInst, int nCmdShow)
-	{
-		//FIXME: 为什么编译不过？
+int run_application(game_module& app, const wchar_t* className, HINSTANCE hInst, int nCmdShow)
+{
+	//FIXME: 为什么编译不过？
 #if 0
-		if (!XMVerifyCPUSupport())
-		{
-			return 1;
-		}
+	if (!XMVerifyCPUSupport())
+	{
+		return 1;
+	}
 #endif
     
-        //TODO:
+    //TODO:
 
-        // 注册窗口类
-        WNDCLASSEX wcex;
-        wcex.cbSize = sizeof(WNDCLASSEX);
-        wcex.style = CS_HREDRAW | CS_VREDRAW;
-        wcex.lpfnWndProc = WndProc;
-        wcex.cbClsExtra = 0;
-        wcex.cbWndExtra = 0;
-        wcex.hInstance = hInst;
-        wcex.hIcon = LoadIcon(hInst, IDI_APPLICATION);
-        wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-        wcex.lpszMenuName = nullptr;
-        wcex.lpszClassName = className;
-        wcex.hIconSm = LoadIcon(hInst, IDI_APPLICATION);
-        ASSERT(0 != RegisterClassEx(&wcex), "Unable to register a window");
+    // 注册窗口类
+    WNDCLASSEX wcex;
+    wcex.cbSize = sizeof(WNDCLASSEX);
+    wcex.style = CS_HREDRAW | CS_VREDRAW;
+    wcex.lpfnWndProc = WndProc;
+    wcex.cbClsExtra = 0;
+    wcex.cbWndExtra = 0;
+    wcex.hInstance = hInst;
+    wcex.hIcon = LoadIcon(hInst, IDI_APPLICATION);
+    wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+    wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+    wcex.lpszMenuName = nullptr;
+    wcex.lpszClassName = className;
+    wcex.hIconSm = LoadIcon(hInst, IDI_APPLICATION);
+    ASSERT(0 != RegisterClassEx(&wcex), "Unable to register a window");
 
-        // 创建窗口
-        RECT rc = { 0, 0, (LONG)graphics::g_DisplayWidth, (LONG)graphics::g_DisplayHeight };
-        AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
+    // 创建窗口
+    RECT rc = { 0, 0, 1280, 720 }; //FIXME: 从display类里去取
+    AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-        g_hWnd = CreateWindow(className, className, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-            rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInst, nullptr);
+    g_hWnd = CreateWindow(className, className, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+        rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInst, nullptr);
 
-        ASSERT(g_hWnd != 0);
+    ASSERT(g_hWnd != 0);
 
-        initialize_application(app);
+    initialize_application(app);
 
-		ShowWindow(g_hWnd, nCmdShow);
+	ShowWindow(g_hWnd, nCmdShow);
 
-		do
+	do
+	{
+		MSG msg = {};
+		bool done = false;
+		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
 		{
-			MSG msg = {};
-			bool done = false;
-			while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
 
-                if (msg.message == WM_QUIT)
-                {
-					done = true;
-                }
-			}
-
-            if (done)
+            if (msg.message == WM_QUIT)
             {
-				break;
+				done = true;
             }
-		} while (update_application(app));
+		}
 
-		terminate_application(app);
-		graphics::shutdown();
-		return 0;
-	}
-
-    /** 窗口过程 */
-    static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-    {
-        switch (message)
+        if (done)
         {
-        case WM_SIZE:
-            //TODO:
-            break;
-
-        case WM_DESTROY:
-            PostQuitMessage(0);
-            break;
-
-        default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
+			break;
         }
+	} while (update_application(app));
 
-        return 0;
-    }
+	terminate_application(app);
 
-	static void initialize_application(game_app& game)
-    {
-        int argc = 0;
-        LPWSTR* argv = CommandLineToArgvW(GetCommandLineW(), &argc);
-        CommandLineArgs::Initialize(argc, argv);
+	rhi.shutdown();
 
-        graphics::initialize(true);
+	return 0;
+}
 
-        game.startup();
-    }
-
-    static void terminate_application(game_app& game)
-    {
-        game.cleanup();
-    }
-
-    static bool update_application(game_app& game)
-    {
-        game.update(1.0f / 33);
-        game.render_scene();
-
-        return true;
-    }
+graphics* get_rhi()
+{
+    return &rhi;
 }

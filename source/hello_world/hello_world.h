@@ -2,7 +2,7 @@
 
 #include "core/game_core.h"
 
-class hello_world_app : public game_core::game_app
+class hello_world_app : public game_module
 {
 public:
 	virtual void startup() override;
