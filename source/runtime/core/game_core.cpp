@@ -109,14 +109,20 @@ namespace game_core
         CommandLineArgs::Initialize(argc, argv);
 
         graphics::initialize(true);
+
+        game.startup();
     }
 
     static void terminate_application(game_app& game)
     {
+        game.cleanup();
     }
 
     static bool update_application(game_app& game)
     {
+        game.update(1.0f / 33);
+        game.render_scene();
+
         return true;
     }
 }

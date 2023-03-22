@@ -1,3 +1,5 @@
+#pragma once
+
 #include "core/game_core.h"
 
 class hello_world_app : public game_core::game_app
