@@ -55,6 +55,8 @@ add_library(lib_engine
     core/compute_context.cpp
     core/command_context_manager.h
     core/command_context_manager.cpp
+    core/root_signature.h
+    core/root_signature.cpp
     )
 
 target_precompile_headers(lib_engine PRIVATE core/pch.h)
