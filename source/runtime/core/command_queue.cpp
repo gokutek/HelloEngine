@@ -82,7 +82,7 @@ bool command_queue::is_fence_complete(uint64_t fence_value)
 void command_queue::stall_for_fence(uint64_t fence_value)
 {
 	D3D12_COMMAND_LIST_TYPE type = (D3D12_COMMAND_LIST_TYPE)(fence_value >> 56);
-	command_queue& producer = graphics::command_manager.get_queue(type);
+	command_queue& producer = get_rhi()->command_manager_.get_queue(type);
 	rhi_command_queue_->Wait(producer.get_fence(), fence_value);
 }
 

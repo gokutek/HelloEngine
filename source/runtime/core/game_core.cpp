@@ -3,10 +3,8 @@
 #include "utility.h"
 #include "graphics_core.h"
 #include "util/command_line_arg.h"
+#include "global.h"
 #include <shellapi.h>
-
-static HWND g_hWnd = nullptr;
-static graphics rhi;
 
 /** ´°¿Ú¹ý³Ì */
 static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

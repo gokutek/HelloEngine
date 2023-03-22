@@ -1,6 +1,7 @@
 #include "descriptor_heap.h"
 #include "utility.h"
 #include "graphics_core.h"
+#include "game_core.h"
 
 descriptor_heap::descriptor_heap() :
 	descriptor_size_(0),
@@ -20,10 +21,10 @@ void descriptor_heap::create(wchar_t const* debug_heap_name, D3D12_DESCRIPTOR_HE
 	heap_desc_.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	heap_desc_.NodeMask = 1;
 
-	ASSERT_SUCCEEDED(graphics::device->CreateDescriptorHeap(&heap_desc_, IID_PPV_ARGS(rhi_heap_.ReleaseAndGetAddressOf())));
+	ASSERT_SUCCEEDED(get_rhi()->device->CreateDescriptorHeap(&heap_desc_, IID_PPV_ARGS(rhi_heap_.ReleaseAndGetAddressOf())));
 	rhi_heap_->SetName(debug_heap_name);
 
-	descriptor_size_ = graphics::device->GetDescriptorHandleIncrementSize(type);
+	descriptor_size_ = get_rhi()->device->GetDescriptorHandleIncrementSize(type);
 	free_descriptors_num_ = max_count;
 
 	first_handle_ = descriptor_handle(rhi_heap_->GetCPUDescriptorHandleForHeapStart(), rhi_heap_->GetGPUDescriptorHandleForHeapStart());

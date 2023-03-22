@@ -9,7 +9,7 @@ pixel_buffer::pixel_buffer() :
 {
 }
 
-void pixel_buffer::export_to_file(std::wstring const& fpath)
+void pixel_buffer::export_to_file(wchar_t const* fpath)
 {
 	ASSERT(false);
 }
@@ -90,6 +90,22 @@ D3D12_RESOURCE_DESC pixel_buffer::describe_tex_2d(uint32_t width, uint32_t heigh
 	return desc;
 }
 
+void pixel_buffer::associate_with_resource(ID3D12Device* device, wchar_t const* name, ID3D12Resource* resource, D3D12_RESOURCE_STATES current_state)
+{
+    rhi_resource_.Attach(resource);
+    usage_state_ = current_state;
+
+    D3D12_RESOURCE_DESC desc = resource->GetDesc();
+    width_ = (uint32_t)desc.Width; //FIXME: ¸Ä³Éuint64?
+    height_ = desc.Height;
+    array_size_ = desc.DepthOrArraySize;
+    format_ = desc.Format;
+
+#ifdef _DEBUG
+    rhi_resource_->SetName(name);
+#endif
+}
+
 void pixel_buffer::create_texture_resource(ID3D12Device* device, wchar_t const* name, const D3D12_RESOURCE_DESC& res_desc, D3D12_CLEAR_VALUE clear_value, D3D12_GPU_VIRTUAL_ADDRESS gpu_vaddr)
 {
 	destroy();
@@ -102,7 +118,5 @@ void pixel_buffer::create_texture_resource(ID3D12Device* device, wchar_t const* 
 
 #ifdef _DEBUG
 	rhi_resource_->SetName(name);
-#else
-	name;
 #endif
 }

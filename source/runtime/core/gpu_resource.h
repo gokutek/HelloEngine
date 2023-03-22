@@ -12,7 +12,7 @@ class gpu_resource
 public:
 	gpu_resource();
 	gpu_resource(ID3D12Resource* resource, D3D12_RESOURCE_STATES current_state);
-	~gpu_resource();
+	virtual ~gpu_resource();
 
 	virtual void destroy();
 	ID3D12Resource* get_resource();

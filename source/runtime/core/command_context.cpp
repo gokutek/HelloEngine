@@ -4,7 +4,7 @@
 
 command_context& command_context::begin(wchar_t const* id)
 {
-	command_context* new_context = graphics::context_manager.allocate_context(D3D12_COMMAND_LIST_TYPE_DIRECT);
+	command_context* new_context = get_rhi()->context_manager_.allocate_context(D3D12_COMMAND_LIST_TYPE_DIRECT);
 	new_context->set_id(id);
 	//TODO: profiling
 	return *new_context;

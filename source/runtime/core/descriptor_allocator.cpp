@@ -27,7 +27,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE descriptor_allocator::allocate(uint32_t count)
 
 		if (!descriptor_size_)
 		{
-			descriptor_size_ = graphics::device->GetDescriptorHandleIncrementSize(heap_type_);
+			descriptor_size_ = get_rhi()->device->GetDescriptorHandleIncrementSize(heap_type_);
 		}
 	}
 
@@ -46,7 +46,7 @@ ID3D12DescriptorHeap* descriptor_allocator::request_new_heap(D3D12_DESCRIPTOR_HE
 	desc.NodeMask = 1;
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heap;
-	ASSERT_SUCCEEDED(graphics::device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
+	ASSERT_SUCCEEDED(get_rhi()->device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
 
 	std::lock_guard<std::mutex> guard(mutex_);
 	heap_pool_.emplace_back(heap);

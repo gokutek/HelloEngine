@@ -22,7 +22,7 @@ static bool IsDirectXRaytracingSupported(ID3D12Device* testDevice)
 	return featureSupport.RaytracingTier != D3D12_RAYTRACING_TIER_NOT_SUPPORTED;
 }
 
-static int init_device(bool RequireDXRSupport)
+int graphics::init_device(bool RequireDXRSupport)
 {
 	Microsoft::WRL::ComPtr<ID3D12Device> pDevice;
 
@@ -178,7 +178,7 @@ static int init_device(bool RequireDXRSupport)
 	return 0;
 }
 
-static int init_info_queue()
+int graphics::init_info_queue()
 {
 #if _DEBUG
 	ID3D12InfoQueue* pInfoQueue = nullptr;
@@ -230,7 +230,7 @@ static int init_info_queue()
 	return 0;
 }
 
-static int check_feature_support()
+int graphics::check_feature_support()
 {
 	// We like to do read-modify-write operations on UAVs during post processing.  To support that, we
 	// need to either have the hardware do typed UAV loads of R11G11B10_FLOAT or we need to manually
@@ -265,17 +265,15 @@ static int check_feature_support()
 	return 0;
 }
 
-ID3D12Device* graphics::device = nullptr;
-command_list_manager graphics::command_manager;
-command_context_manager graphics::context_manager;
-
 void graphics::initialize(bool RequireDXRSupport)
 {
 	init_device(RequireDXRSupport);
 	init_info_queue();
 	check_feature_support();
 
-	//TODO:
+	command_manager_.create(device);
+	//TODO: init common state
+	display_.initialize();
 }
 
 void graphics::shutdown()

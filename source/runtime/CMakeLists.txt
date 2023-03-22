@@ -10,6 +10,8 @@ INCLUDE_DIRECTORIES(${CMAKE_HOME_DIRECTORY}/source/runtime)
 # ==============================================================================
 add_library(lib_engine
     core/pch.h
+    core/global.h
+    core/global.cpp
     core/game_core.h
     core/game_core.cpp
     core/graphics_core.h
