@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include "utility.h"
 #include <mutex>
 
 /*
@@ -21,7 +22,7 @@ private:
 
 private:
 	static std::mutex mutex_;
-	static std::vector<Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>> heap_pool_;
+	static std::vector<ComPtr<ID3D12DescriptorHeap>> heap_pool_;
 
 	D3D12_DESCRIPTOR_HEAP_TYPE heap_type_;
 	ID3D12DescriptorHeap* current_heap_;

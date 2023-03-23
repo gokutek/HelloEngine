@@ -19,7 +19,7 @@ void display::initialize()
 {
 
 	//´´½¨factory
-	Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
+	ComPtr<IDXGIFactory4> factory;
 	ASSERT_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&factory)));
 
 	DXGI_SWAP_CHAIN_DESC1 desc = {};
@@ -47,7 +47,7 @@ void display::initialize()
 	display_plane_.reset(new color_buffer[SWAP_CHAIN_BUFFER_COUNT]);
 	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 	{
-		Microsoft::WRL::ComPtr<ID3D12Resource> buffer;
+		ComPtr<ID3D12Resource> buffer;
 		rhi_swap_chain_->GetBuffer(i, IID_PPV_ARGS(&buffer));
 		display_plane_[i].create_from_swap_chain(L"Primary SwapChain Buffer", buffer.Detach());
 	}

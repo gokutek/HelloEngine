@@ -19,6 +19,9 @@
 #define ASSERT_SUCCEEDED(hr, ... ) hr
 #endif
 
+template<typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+
 namespace utility
 {
 	inline void Print(const char* msg)

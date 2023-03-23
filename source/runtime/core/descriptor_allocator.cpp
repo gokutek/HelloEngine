@@ -1,11 +1,10 @@
 #include "descriptor_allocator.h"
 #include "graphics_core.h"
-#include "utility.h"
 
 static constexpr int NUM_DESCRIPTORS_PER_HEAP = 256;
 
 std::mutex descriptor_allocator::mutex_;
-std::vector<Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>> descriptor_allocator::heap_pool_;
+std::vector<ComPtr<ID3D12DescriptorHeap>> descriptor_allocator::heap_pool_;
 
 descriptor_allocator::descriptor_allocator(D3D12_DESCRIPTOR_HEAP_TYPE heap_type) :
 	heap_type_(heap_type),
@@ -45,7 +44,7 @@ ID3D12DescriptorHeap* descriptor_allocator::request_new_heap(D3D12_DESCRIPTOR_HE
 	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 	desc.NodeMask = 1;
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> heap;
+	ComPtr<ID3D12DescriptorHeap> heap;
 	ASSERT_SUCCEEDED(get_rhi()->device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap)));
 
 	std::lock_guard<std::mutex> guard(mutex_);

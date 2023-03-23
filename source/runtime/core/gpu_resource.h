@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include "utility.h"
 #include <stdint.h>
 
 /*
@@ -24,7 +25,7 @@ public:
 	const ID3D12Resource* operator->() const;
 
 protected:
-	Microsoft::WRL::ComPtr<ID3D12Resource> rhi_resource_;
+	ComPtr<ID3D12Resource> rhi_resource_;
 	D3D12_RESOURCE_STATES usage_state_;
 	D3D12_RESOURCE_STATES transitioning_state_;
 	D3D12_GPU_VIRTUAL_ADDRESS gpu_virtual_address_;

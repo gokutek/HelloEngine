@@ -1,5 +1,4 @@
 #include "descriptor_heap.h"
-#include "utility.h"
 #include "graphics_core.h"
 #include "game_core.h"
 

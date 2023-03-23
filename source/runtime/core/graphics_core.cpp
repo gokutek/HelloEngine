@@ -24,7 +24,7 @@ static bool IsDirectXRaytracingSupported(ID3D12Device* testDevice)
 
 int graphics::init_device(bool RequireDXRSupport)
 {
-	Microsoft::WRL::ComPtr<ID3D12Device> pDevice;
+	ComPtr<ID3D12Device> pDevice;
 
 #if _DEBUG
 	uint32_t useDebugLayers = 1;
@@ -37,7 +37,7 @@ int graphics::init_device(bool RequireDXRSupport)
 
 	if (useDebugLayers)
 	{
-		Microsoft::WRL::ComPtr<ID3D12Debug> debugInterface;
+		ComPtr<ID3D12Debug> debugInterface;
 		if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface))))
 		{
 			debugInterface->EnableDebugLayer();
@@ -46,7 +46,7 @@ int graphics::init_device(bool RequireDXRSupport)
 			CommandLineArgs::GetInteger(L"gpu_debug", useGPUBasedValidation);
 			if (useGPUBasedValidation)
 			{
-				Microsoft::WRL::ComPtr<ID3D12Debug1> debugInterface1;
+				ComPtr<ID3D12Debug1> debugInterface1;
 				if (SUCCEEDED((debugInterface->QueryInterface(IID_PPV_ARGS(&debugInterface1)))))
 				{
 					debugInterface1->SetEnableGPUBasedValidation(true);
@@ -59,7 +59,7 @@ int graphics::init_device(bool RequireDXRSupport)
 		}
 
 #if _DEBUG
-		Microsoft::WRL::ComPtr<IDXGIInfoQueue> dxgiInfoQueue;
+		ComPtr<IDXGIInfoQueue> dxgiInfoQueue;
 		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(dxgiInfoQueue.GetAddressOf()))))
 		{
 			dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
@@ -80,11 +80,11 @@ int graphics::init_device(bool RequireDXRSupport)
 	}
 
 	// Obtain the DXGI factory
-	Microsoft::WRL::ComPtr<IDXGIFactory6> dxgiFactory;
+	ComPtr<IDXGIFactory6> dxgiFactory;
 	ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&dxgiFactory)));
 
 	// Create the D3D graphics device
-	Microsoft::WRL::ComPtr<IDXGIAdapter1> pAdapter;
+	ComPtr<IDXGIAdapter1> pAdapter;
 
 	uint32_t bUseWarpDriver = false;
 	CommandLineArgs::GetInteger(L"warp", bUseWarpDriver);

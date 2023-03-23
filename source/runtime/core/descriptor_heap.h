@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include "utility.h"
 #include <stdint.h>
 
 /*
@@ -53,7 +54,7 @@ public:
 	uint32_t get_descriptor_size() const;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rhi_heap_;
+	ComPtr<ID3D12DescriptorHeap> rhi_heap_;
 	D3D12_DESCRIPTOR_HEAP_DESC heap_desc_;
 	uint32_t descriptor_size_;
 	uint32_t free_descriptors_num_;
