@@ -53,4 +53,20 @@ namespace utility
 		va_end(ap);
 		Print(buffer);
 	}
+
+	/** 计算数组的哈希 */
+	template<typename T>
+	inline size_t hash_array(T const* array, size_t count, size_t hash)
+	{
+		static_assert((sizeof(T) & 3) == 0 && alignof(T) >= 4, "State object is not word-aligned");
+
+		uint32_t* begin = (uint32_t const*)array;
+		uint32_t* end = (uint32_t const*)(array+count);
+		for (; begin != end; ++begin)
+		{
+			hash = hash * 16777619U ^ *begin;
+		}
+
+		return hash;
+	}
 }
