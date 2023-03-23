@@ -1,7 +1,7 @@
 #include "root_signature.h"
 #include "utility.h"
 
-class root_parameter
+class root_parameter : public D3D12_ROOT_PARAMETER
 {
 public:
 };
@@ -90,5 +90,19 @@ void root_signature::init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DES
 
 void root_signature::finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS flags)
 {
+	if (finalized_) { return; }
+
+	ASSERT(samplers_num_ == init_static_samplers_num_);
+
+	D3D12_ROOT_SIGNATURE_DESC desc;
+	desc.NumParameters = parameters_num_;
+	desc.pParameters = param_array_.get();
+	desc.NumStaticSamplers = samplers_num_;
+	desc.pStaticSamplers = sampler_array_.get();
+	desc.Flags = flags;
+
+	descriptor_table_bmp_ = 0;
+	sampler_table_bmp_ = 0;
+
 	//TODO:
 }
