@@ -1,10 +1,12 @@
 #include "root_signature.h"
-#include "utility.h"
+#include "graphics_core.h"
 
 class root_parameter : public D3D12_ROOT_PARAMETER
 {
 public:
 };
+
+std::unordered_map<size_t, ComPtr<ID3D12RootSignature> > root_signature::rhi_root_signatures_map_;
 
 root_signature::root_signature(uint32_t root_params_num, uint32_t static_samplers_num) :
 	finalized_(false),
@@ -12,8 +14,7 @@ root_signature::root_signature(uint32_t root_params_num, uint32_t static_sampler
 	samplers_num_(0),
 	init_static_samplers_num_(0),
 	descriptor_table_bmp_(0),
-	sampler_table_bmp_(0),
-	rhi_root_signature_(nullptr)
+	sampler_table_bmp_(0)
 {
 	memset(&descriptor_table_size_, 0, sizeof(descriptor_table_size_));
 
@@ -27,7 +28,7 @@ root_signature::~root_signature()
 
 void root_signature::destroy_all()
 {
-	//TODO:
+	rhi_root_signatures_map_.clear();
 }
 
 void root_signature::reset(uint32_t root_params_num, uint32_t static_samplers_num)
@@ -39,10 +40,10 @@ void root_signature::reset(uint32_t root_params_num, uint32_t static_samplers_nu
 	sampler_array_.reset(new D3D12_STATIC_SAMPLER_DESC[static_samplers_num]);
 }
 
-root_parameter* root_signature::get_root_parameter(size_t index)
+D3D12_ROOT_PARAMETER& root_signature::get_root_parameter(size_t index)
 {
-	//TODO:
-	return nullptr;
+	ASSERT(index < parameters_num_);
+	return param_array_[index];
 }
 
 void root_signature::init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility)
@@ -94,15 +95,64 @@ void root_signature::finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS fl
 
 	ASSERT(samplers_num_ == init_static_samplers_num_);
 
-	D3D12_ROOT_SIGNATURE_DESC desc;
-	desc.NumParameters = parameters_num_;
-	desc.pParameters = param_array_.get();
-	desc.NumStaticSamplers = samplers_num_;
-	desc.pStaticSamplers = sampler_array_.get();
-	desc.Flags = flags;
+	D3D12_ROOT_SIGNATURE_DESC root_desc;
+	root_desc.NumParameters = parameters_num_;
+	root_desc.pParameters = param_array_.get();
+	root_desc.NumStaticSamplers = samplers_num_;
+	root_desc.pStaticSamplers = sampler_array_.get();
+	root_desc.Flags = flags;
 
 	descriptor_table_bmp_ = 0;
 	sampler_table_bmp_ = 0;
 
-	//TODO:
+	size_t hash_code = utility::hash_array(&root_desc.Flags, 1);
+	hash_code = utility::hash_array(root_desc.pStaticSamplers, root_desc.NumStaticSamplers, hash_code);
+
+	for (UINT i = 0; i < root_desc.NumParameters; ++i)
+	{
+		descriptor_table_size_[i] = 0;
+
+		D3D12_ROOT_PARAMETER const& param = root_desc.pParameters[i];
+		if (param.ParameterType == D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE)
+		{
+			hash_code = utility::hash_array(param.DescriptorTable.pDescriptorRanges, param.DescriptorTable.NumDescriptorRanges, hash_code);
+
+			if (param.DescriptorTable.pDescriptorRanges->RangeType == D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER)
+			{
+				sampler_table_bmp_ |= (1 << i);
+			}
+			else
+			{
+				descriptor_table_bmp_ |= (1 << i);
+			}
+
+			for (UINT j = 0; j < param.DescriptorTable.NumDescriptorRanges; ++j)
+			{
+				descriptor_table_size_[i] += param.DescriptorTable.pDescriptorRanges[j].NumDescriptors;
+			}
+		}
+		else
+		{
+			hash_code = utility::hash_array(&param, 1, hash_code);
+		}
+	}
+
+	//TODO: 这里简化了，没有多线程支持
+
+	auto iter = rhi_root_signatures_map_.find(hash_code);
+	if (iter == rhi_root_signatures_map_.end())
+	{
+		ComPtr<ID3DBlob> blob, error_blob;
+		ASSERT_SUCCEEDED(D3D12SerializeRootSignature(&root_desc, D3D_ROOT_SIGNATURE_VERSION_1, blob.GetAddressOf(), error_blob.GetAddressOf()));
+		ASSERT_SUCCEEDED(get_rhi()->device->CreateRootSignature(1, blob->GetBufferPointer(), blob->GetBufferSize(), IID_PPV_ARGS(&rhi_root_signature_)));
+		rhi_root_signature_->SetName(name);
+
+		rhi_root_signatures_map_[hash_code] = rhi_root_signature_;
+	}
+	else
+	{
+		rhi_root_signature_ = iter->second.Get();
+	}
+
+	finalized_ = true;
 }
