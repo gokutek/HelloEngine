@@ -18,6 +18,10 @@ struct color
 	void set_a(float a);
 
 	//TODO: 不同颜色格式的转换，如sRGB
+	float* get_ptr()
+	{
+		return value_.f;
+	}
 
 private:
 	DirectX::XMVECTORF32 value_; ///< 归一化后的RGBA

@@ -20,12 +20,13 @@ void graphics_context::clear_uav(color_buffer& target)
 void graphics_context::clear_color(color_buffer& target, D3D12_RECT const* rect)
 {
 	flush_resource_barriers();
-	//rhi_command_list_->ClearRenderTargetView()
-	//TODO:
+	color clear_color = target.get_clear_color();
+	rhi_command_list_->ClearRenderTargetView(target.get_rtv(), clear_color.get_ptr(), rect != nullptr ? 0 : 1, rect);
 }
 
 void graphics_context::clear_depth(depth_buffer& target)
 {
+	flush_resource_barriers();
 	//TODO:
 }
 

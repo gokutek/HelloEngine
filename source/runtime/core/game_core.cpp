@@ -53,6 +53,8 @@ static bool update_application(game_module& game)
 
     //TODO: äÖÈ¾UI
 
+    get_rhi()->display_.present();
+
     return true;
 }
     

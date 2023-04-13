@@ -1,6 +1,7 @@
 #include "hello_world.h"
 #include "core/graphics_context.h"
 #include "core/utility.h"
+#include "core/graphics_core.h"
 #include <string>
 #include <memory>
 
@@ -45,11 +46,13 @@ void hello_world_app::update(float delta_time)
 
 void hello_world_app::render_scene()
 {
+	buffer_manager& buffer_man = get_rhi()->buffer_manager_;
+
 	graphics_context& context = graphics_context::begin(L"Scene Render");
 
-	//context.clear_depth();
-	//context.clear_color();
-	//context.finish();
+	context.clear_depth(*buffer_man.scene_depth_buffer);
+	context.clear_color(*buffer_man.scene_color_buffer, nullptr);
+	context.finish(true);
 
 	//TODO:»æÖÆÈý½ÇÐÎ
 }

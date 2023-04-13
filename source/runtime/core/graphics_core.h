@@ -7,6 +7,7 @@
 #include "descriptor_allocator.h"
 #include "display.h"
 #include <memory>
+#include <vector>
 
 class graphics
 {
@@ -25,7 +26,7 @@ public:
 	command_context_manager context_manager_;
 	buffer_manager buffer_manager_;
 	display display_;
-	//descriptor_allocator descriptor_allocators[];
+	std::vector<descriptor_allocator> descriptor_allocators;
 };
 
 graphics* get_rhi();
