@@ -287,6 +287,7 @@ void graphics::initialize(bool RequireDXRSupport)
 	command_manager_.create(device);
 	//TODO: init common state
 	display_.initialize();
+	buffer_manager_.initialize_rendering_buffers(1280, 720);
 }
 
 void graphics::shutdown()

@@ -2,6 +2,7 @@
 #include "utility.h"
 #include "graphics_core.h"
 #include "global.h"
+#include "buffer_manager.h"
 
 #define SWAP_CHAIN_BUFFER_COUNT 3
 #define SWAP_CHAIN_FORMAT  DXGI_FORMAT_R10G10B10A2_UNORM
@@ -17,7 +18,6 @@ display::display() :
 
 void display::initialize()
 {
-
 	//´´½¨factory
 	ComPtr<IDXGIFactory4> factory;
 	ASSERT_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&factory)));

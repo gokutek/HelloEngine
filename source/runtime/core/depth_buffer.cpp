@@ -49,6 +49,7 @@ void depth_buffer::create_derived_views(ID3D12Device* device, DXGI_FORMAT format
 	if (dsv_handle_[0].ptr == D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN)
 	{
 		dsv_handle_[0] = get_rhi()->allocate_descriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
+		dsv_handle_[1] = get_rhi()->allocate_descriptor(D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
 	}
 
 	//Œﬁ±Í÷æ

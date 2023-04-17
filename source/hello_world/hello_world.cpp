@@ -46,13 +46,26 @@ void hello_world_app::update(float delta_time)
 
 void hello_world_app::render_scene()
 {
+	D3D12_VIEWPORT viewport = {};
+	viewport.Width = 1280;
+	viewport.Height = 720;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+
+	D3D12_RECT scissor = {};
+	scissor.left = 0;
+	scissor.top = 0;
+	scissor.right = 1280;
+	scissor.bottom = 720;
+
 	buffer_manager& buffer_man = get_rhi()->buffer_manager_;
 
 	graphics_context& context = graphics_context::begin(L"Scene Render");
-
+	//context.TransitionResource(g_SceneColorBuffer, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 	context.clear_depth(*buffer_man.scene_depth_buffer);
 	context.clear_color(*buffer_man.scene_color_buffer, nullptr);
-	context.finish(true);
+	context.set_viewport_and_scissor(viewport, scissor);
 
 	//TODO:»æÖÆÈý½ÇÐÎ
+	context.finish(true);
 }

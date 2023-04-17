@@ -14,6 +14,9 @@ public:
 	void resize(uint32_t width , uint32_t height);
 	void present();
 
+	uint32_t get_width() const;
+	uint32_t get_height() const;
+
 private:
 	void set_native_resolution();
 
@@ -25,3 +28,6 @@ private:
 	size_t current_buffer_;
 	ComPtr<IDXGISwapChain1> rhi_swap_chain_;
 };
+
+inline uint32_t display::get_width() const { return display_width_; }
+inline uint32_t display::get_height() const { return display_height_; }

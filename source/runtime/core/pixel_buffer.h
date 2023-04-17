@@ -25,6 +25,7 @@ protected:
 	static DXGI_FORMAT get_dsv_format(DXGI_FORMAT format);
 	static DXGI_FORMAT get_stencil_format(DXGI_FORMAT format);
 	static DXGI_FORMAT get_depth_format(DXGI_FORMAT format);
+	static DXGI_FORMAT get_uav_format(DXGI_FORMAT format);
 
 protected:
 	uint32_t width_;

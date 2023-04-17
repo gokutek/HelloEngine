@@ -17,9 +17,13 @@ public:
 	void clear_stencil(depth_buffer& target);
 	void clear_depth_and_stencil(depth_buffer& target);
 
+	void set_viewport_and_scissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect);
+
 	void set_index_buffer(D3D12_INDEX_BUFFER_VIEW const& view);
 	void set_vertex_buffer(uint32_t slot, D3D12_VERTEX_BUFFER_VIEW const& view);
 
 	void draw(uint32_t vertex_count, uint32_t vertex_start_offset);
 	void draw_indexed(uint32_t index_count, uint32_t start_index_location, int base_vertex_location);
 };
+
+static_assert(sizeof(graphics_context) == sizeof(command_context));

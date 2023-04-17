@@ -21,7 +21,7 @@ void graphics_context::clear_color(color_buffer& target, D3D12_RECT const* rect)
 {
 	flush_resource_barriers();
 	color clear_color = target.get_clear_color();
-	rhi_command_list_->ClearRenderTargetView(target.get_rtv(), clear_color.get_ptr(), rect != nullptr ? 0 : 1, rect);
+	rhi_command_list_->ClearRenderTargetView(target.get_rtv(), clear_color.get_ptr(), rect ? 1 : 0, rect);
 }
 
 void graphics_context::clear_depth(depth_buffer& target)
@@ -38,6 +38,12 @@ void graphics_context::clear_stencil(depth_buffer& target)
 void graphics_context::clear_depth_and_stencil(depth_buffer& target)
 {
 	//TODO:
+}
+
+void graphics_context::set_viewport_and_scissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect)
+{
+	rhi_command_list_->RSSetViewports(1, &viewport);
+	rhi_command_list_->RSSetScissorRects(1, &rect);
 }
 
 void graphics_context::set_index_buffer(D3D12_INDEX_BUFFER_VIEW const& view)
