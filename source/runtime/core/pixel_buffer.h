@@ -23,6 +23,8 @@ protected:
 	void create_texture_resource(ID3D12Device* device, wchar_t const* name, const D3D12_RESOURCE_DESC& res_desc, D3D12_CLEAR_VALUE clear_value, D3D12_GPU_VIRTUAL_ADDRESS gpu_vaddr);
 
 	static DXGI_FORMAT get_dsv_format(DXGI_FORMAT format);
+	static DXGI_FORMAT get_stencil_format(DXGI_FORMAT format);
+	static DXGI_FORMAT get_depth_format(DXGI_FORMAT format);
 
 protected:
 	uint32_t width_;

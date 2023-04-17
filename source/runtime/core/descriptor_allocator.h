@@ -6,6 +6,10 @@
 
 /*
 ===============================================================================
+Heap可以理解为一个数组，Heap的类型决定了每个元素的大小，另外还要指定数组的长度；
+Hanlde可以理解为数组中某个元素的指针；
+Handle分CPU和GPU，它们的地址是不一样的？
+
 FIXME: 几个static成员是否可以改成非static的？
 ===============================================================================
 */
@@ -19,6 +23,8 @@ public:
 
 private:
 	static ID3D12DescriptorHeap* request_new_heap(D3D12_DESCRIPTOR_HEAP_TYPE heap_type);
+
+	descriptor_allocator(descriptor_allocator const&) = delete;
 
 private:
 	static std::mutex mutex_;

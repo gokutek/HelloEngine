@@ -14,6 +14,8 @@ class graphics
 public:
 	void initialize(bool RequireDXRSupport = false);
 	void shutdown();
+	
+	D3D12_CPU_DESCRIPTOR_HANDLE allocate_descriptor(D3D12_DESCRIPTOR_HEAP_TYPE heap_type, uint32_t count);
 
 private:
 	int init_device(bool RequireDXRSupport);
@@ -26,7 +28,7 @@ public:
 	command_context_manager context_manager_;
 	buffer_manager buffer_manager_;
 	display display_;
-	std::vector<descriptor_allocator> descriptor_allocators;
+	std::vector<std::unique_ptr<descriptor_allocator> > descriptor_allocators_;
 };
 
 graphics* get_rhi();

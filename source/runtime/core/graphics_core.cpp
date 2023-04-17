@@ -267,6 +267,19 @@ int graphics::check_feature_support()
 
 void graphics::initialize(bool RequireDXRSupport)
 {
+	D3D12_DESCRIPTOR_HEAP_TYPE heap_types[] = 
+	{
+		D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV,
+		D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER,
+		D3D12_DESCRIPTOR_HEAP_TYPE_RTV,
+		D3D12_DESCRIPTOR_HEAP_TYPE_DSV
+	};
+
+	for (int i = 0; i < _countof(heap_types); ++i)
+	{
+		descriptor_allocators_.push_back(std::make_unique<descriptor_allocator>(heap_types[i]));
+	}
+
 	init_device(RequireDXRSupport);
 	init_info_queue();
 	check_feature_support();
@@ -279,4 +292,9 @@ void graphics::initialize(bool RequireDXRSupport)
 void graphics::shutdown()
 {
 	//TODO:
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE graphics::allocate_descriptor(D3D12_DESCRIPTOR_HEAP_TYPE heap_type, uint32_t count)
+{
+	return descriptor_allocators_[heap_type]->allocate(count);
 }

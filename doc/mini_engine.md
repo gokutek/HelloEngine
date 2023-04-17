@@ -1,5 +1,23 @@
+## 移植问题
 `CommandContext`有`GraphicsContext`和`ComputeContext`两个子类，子类中都不含任何成员
 变量。基类的析构函数也不是`virtual`的。
+
+## DX12术语
+* View：一个Buffer可以对应多个不同的View
+* CBV：Constant Buffer View
+* SRV：Shader Resource View
+* UAV：Unordered Access View
+* DSV：Depth Stencil View
+
+创建View的接口形式上都差不多：
+```C++
+void CreateDepthStencilView(
+    [in, optional] ID3D12Resource                      *pResource,
+    [in, optional] const D3D12_DEPTH_STENCIL_VIEW_DESC *pDesc,
+    [in]           D3D12_CPU_DESCRIPTOR_HANDLE         DestDescriptor
+);
+```
+这个函数的返回值是void，View将创建在第3个handle指向的区域里。
 
 ## Root signature
 
