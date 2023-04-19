@@ -7,7 +7,7 @@
 
 /*
 ===============================================================================
-ID3D12CommandAllocator的缓存池
+ID3D12CommandAllocator对象的缓存池
 ===============================================================================
 */
 class command_allocator_pool
@@ -27,7 +27,9 @@ public:
 private:
 	const D3D12_COMMAND_LIST_TYPE type_;
 	ID3D12Device* device_;
+	/** 所有的 */
 	std::vector<ID3D12CommandAllocator*> allocator_pool_;
+	/** 使用完的，是上面的子集 */
 	std::queue<std::pair<uint64_t, ID3D12CommandAllocator*>> ready_allocators_;
 	std::mutex allocator_mutex_;
 };

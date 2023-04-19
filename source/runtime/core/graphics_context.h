@@ -17,6 +17,8 @@ public:
 	void clear_stencil(depth_buffer& target);
 	void clear_depth_and_stencil(depth_buffer& target);
 
+	void set_render_targets(uint32_t count, D3D12_CPU_DESCRIPTOR_HANDLE const* rtv_array);
+
 	void set_viewport_and_scissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect);
 
 	void set_index_buffer(D3D12_INDEX_BUFFER_VIEW const& view);

@@ -40,6 +40,11 @@ void graphics_context::clear_depth_and_stencil(depth_buffer& target)
 	//TODO:
 }
 
+void graphics_context::set_render_targets(uint32_t count, D3D12_CPU_DESCRIPTOR_HANDLE const* rtv_array)
+{
+	rhi_command_list_->OMSetRenderTargets(count, rtv_array, FALSE, nullptr);
+}
+
 void graphics_context::set_viewport_and_scissor(const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect)
 {
 	rhi_command_list_->RSSetViewports(1, &viewport);

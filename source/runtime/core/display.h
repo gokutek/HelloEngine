@@ -17,6 +17,8 @@ public:
 	uint32_t get_width() const;
 	uint32_t get_height() const;
 
+	color_buffer* get_current_color_buffer();
+
 private:
 	void set_native_resolution();
 
@@ -29,5 +31,17 @@ private:
 	ComPtr<IDXGISwapChain1> rhi_swap_chain_;
 };
 
-inline uint32_t display::get_width() const { return display_width_; }
-inline uint32_t display::get_height() const { return display_height_; }
+inline uint32_t display::get_width() const 
+{
+	return display_width_; 
+}
+
+inline uint32_t display::get_height() const 
+{
+	return display_height_; 
+}
+
+inline color_buffer* display::get_current_color_buffer()
+{
+	return &display_plane_[current_buffer_];
+}

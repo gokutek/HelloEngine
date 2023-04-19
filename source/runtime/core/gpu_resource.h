@@ -24,6 +24,12 @@ public:
 	ID3D12Resource* operator->();
 	const ID3D12Resource* operator->() const;
 
+	D3D12_RESOURCE_STATES get_usage_state() const;
+	void set_usage_state(D3D12_RESOURCE_STATES new_state);
+
+	D3D12_RESOURCE_STATES get_transitioning_state() const;
+	void set_transitioning_state(D3D12_RESOURCE_STATES new_state);
+
 protected:
 	ComPtr<ID3D12Resource> rhi_resource_;
 	D3D12_RESOURCE_STATES usage_state_;
@@ -94,4 +100,24 @@ inline ID3D12Resource* gpu_resource::operator->()
 inline const ID3D12Resource* gpu_resource::operator->() const
 {
 	return get_resource();
+}
+
+inline D3D12_RESOURCE_STATES gpu_resource::get_usage_state() const
+{
+	return usage_state_;
+}
+
+inline void gpu_resource::set_usage_state(D3D12_RESOURCE_STATES new_state)
+{
+	usage_state_ = new_state;
+}
+
+inline D3D12_RESOURCE_STATES gpu_resource::get_transitioning_state() const
+{
+	return transitioning_state_;
+}
+
+inline void gpu_resource::set_transitioning_state(D3D12_RESOURCE_STATES new_state)
+{
+	transitioning_state_ = new_state;
 }

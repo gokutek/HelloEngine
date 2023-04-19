@@ -31,11 +31,17 @@ public:
 
 	//TODO:几个buffer的拷贝的方法
 
+	void transition_resource(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate);
+
 	void flush_resource_barriers();
 
 	void set_id(std::wstring const& id);
 
+	D3D12_COMMAND_LIST_TYPE get_type() const;
+
 private:
+	void bind_descriptor_heaps();
+
 	command_context() = default;
 	command_context(const command_context&) = delete;
 	command_context& operator=(const command_context&) = delete;
@@ -50,6 +56,9 @@ protected:
 	ID3D12RootSignature* rhi_cur_graphics_root_signature_;
 	ID3D12RootSignature* rhi_cur_compute_root_signature_;
 	ID3D12PipelineState* rhi_cur_pipeline_state_;
+
+	D3D12_RESOURCE_BARRIER resource_barrier_buffers_[16];
+	UINT num_barriers_to_flush_;
 };
 
 inline void command_context::set_id(std::wstring const& id)
@@ -57,7 +66,7 @@ inline void command_context::set_id(std::wstring const& id)
 	id_ = id;
 }
 
-inline void command_context::flush_resource_barriers()
+inline D3D12_COMMAND_LIST_TYPE command_context::get_type() const
 {
-	//TODO:
+	return type_;
 }

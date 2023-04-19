@@ -48,6 +48,11 @@ void command_queue::create(ID3D12Device* device)
 
 void command_queue::shutdown()
 {
+	if (!rhi_command_queue_) 
+	{
+		return; 
+	}
+
 	allocator_pool_.shutdown();
 
 	CloseHandle(fence_event_handle_);
@@ -115,7 +120,11 @@ uint64_t command_queue::execute_command_list(ID3D12CommandList* list)
 {
 	std::lock_guard<std::mutex> guard(fence_mutex_);
 
-	ASSERT_SUCCEEDED(((ID3D12GraphicsCommandList*)list)->Close());
+	ID3D12GraphicsCommandList* cmd_list = nullptr;
+	list->QueryInterface<ID3D12GraphicsCommandList>(&cmd_list);
+	ASSERT(cmd_list);
+
+	ASSERT_SUCCEEDED(cmd_list->Close());
 
 	//Ìá½»list
 	rhi_command_queue_->ExecuteCommandLists(1, &list);

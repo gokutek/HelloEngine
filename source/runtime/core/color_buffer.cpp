@@ -23,7 +23,7 @@ color_buffer::color_buffer(color const& clear_color) :
 
 void color_buffer::create_from_swap_chain(wchar_t const* name, ID3D12Resource* resource)
 {
-	associate_with_resource(get_rhi()->device, name, resource, D3D12_RESOURCE_STATE_PREDICATION);
+	associate_with_resource(get_rhi()->device, name, resource, D3D12_RESOURCE_STATE_PRESENT);
 	rtv_handle_ = get_rhi()->allocate_descriptor(D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1);
 	get_rhi()->device->CreateRenderTargetView(rhi_resource_.Get(), nullptr, rtv_handle_);
 }
