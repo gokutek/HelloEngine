@@ -31,7 +31,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE descriptor_allocator::allocate(uint32_t count)
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE handle = current_handle_;
-	handle.ptr += count * descriptor_size_;
+	current_handle_.ptr += count * descriptor_size_;
 	free_handles_ -= count;
 	return handle;
 }
