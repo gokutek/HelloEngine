@@ -2,13 +2,14 @@
 #include "utility.h"
 #include "graphics_core.h"
 
-command_queue::command_queue(D3D12_COMMAND_LIST_TYPE Type) :
-	type_(Type),
+command_queue::command_queue(D3D12_COMMAND_LIST_TYPE type) :
+	type_(type),
 	rhi_command_queue_(nullptr),
+	allocator_pool_(type),
 	fence_(nullptr),
-	next_fence_value_((uint64_t)Type << 56 | 1),
-	last_completed_fence_value_((uint64_t)Type << 56),
-	allocator_pool_(Type)
+	next_fence_value_((uint64_t)type << 56 | 1),
+	last_completed_fence_value_((uint64_t)type << 56),
+	fence_event_handle_(NULL)
 {
 }
 
@@ -39,7 +40,7 @@ void command_queue::create(ID3D12Device* device)
 	fence_->Signal((uint64_t)type_ << 56);
 
 	fence_event_handle_ = CreateEvent(nullptr, false, false, nullptr);
-	ASSERT(fence_event_handle_ != nullptr);
+	ASSERT(fence_event_handle_ != NULL);
 
 	allocator_pool_.create(device);
 

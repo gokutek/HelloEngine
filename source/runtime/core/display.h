@@ -28,7 +28,7 @@ private:
 
 	std::unique_ptr<color_buffer[]> display_plane_;
 	size_t current_buffer_;
-	ComPtr<IDXGISwapChain1> rhi_swap_chain_;
+	ComPtr<IDXGISwapChain3> rhi_swap_chain_;
 };
 
 inline uint32_t display::get_width() const 

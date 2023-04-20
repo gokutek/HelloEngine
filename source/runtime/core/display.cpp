@@ -4,8 +4,8 @@
 #include "global.h"
 #include "buffer_manager.h"
 
-#define SWAP_CHAIN_BUFFER_COUNT 3
-#define SWAP_CHAIN_FORMAT  DXGI_FORMAT_R10G10B10A2_UNORM
+#define SWAP_CHAIN_BUFFER_COUNT 2
+#define SWAP_CHAIN_FORMAT		DXGI_FORMAT_R10G10B10A2_UNORM
 
 display::display() :
 	display_width_(1280),
@@ -22,6 +22,7 @@ void display::initialize()
 	ComPtr<IDXGIFactory4> factory;
 	ASSERT_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&factory)));
 
+	//创建交换链
 	DXGI_SWAP_CHAIN_DESC1 desc = {};
 	desc.Width = display_width_;
 	desc.Height = display_height_;
@@ -39,7 +40,10 @@ void display::initialize()
 	DXGI_SWAP_CHAIN_FULLSCREEN_DESC desc1 = {};
 	desc1.Windowed = TRUE;
 
-	ASSERT_SUCCEEDED(factory->CreateSwapChainForHwnd(get_rhi()->command_manager_.get_graphics_queue().get_command_queue(), g_hWnd, &desc, &desc1, nullptr, rhi_swap_chain_.GetAddressOf()));
+	ComPtr<IDXGISwapChain1> swapChain;
+	ASSERT_SUCCEEDED(factory->CreateSwapChainForHwnd(get_rhi()->command_manager_.get_graphics_queue().get_command_queue(), g_hWnd, &desc, &desc1, nullptr, &swapChain));
+	swapChain.As(&rhi_swap_chain_);
+	current_buffer_ = rhi_swap_chain_->GetCurrentBackBufferIndex();
 
 	//TODO: 支持HDR输出?
 
@@ -68,6 +72,10 @@ void display::resize(uint32_t width, uint32_t height)
 void display::present()
 {
 	//TODO:
+
+	rhi_swap_chain_->Present(0, 0); //TODO: 垂直同步
+
+	current_buffer_ = rhi_swap_chain_->GetCurrentBackBufferIndex();
 }
 
 void display::set_native_resolution()

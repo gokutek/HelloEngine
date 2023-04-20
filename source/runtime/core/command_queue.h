@@ -4,10 +4,18 @@
 #include "command_allocator_pool.h"
 #include <mutex>
 
+/*
+===============================================================================
+主要功能: 
+* 将command list提交GPU
+* 等待GPU执行完command
+* ID3D12CommandAllocator缓存池
+===============================================================================
+*/
 class command_queue
 {
 public:
-	command_queue(D3D12_COMMAND_LIST_TYPE Type);
+	command_queue(D3D12_COMMAND_LIST_TYPE type);
 	~command_queue();
 
 	void create(ID3D12Device* device);

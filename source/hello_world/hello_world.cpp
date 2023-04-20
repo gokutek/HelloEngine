@@ -62,13 +62,12 @@ void hello_world_app::render_scene()
 	cb->set_clear_color(color(1, 1, 0, 1));
 
 	graphics_context& context = graphics_context::begin(L"Scene Render");
-	context.transition_resource(*cb, D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+	context.transition_resource(*cb, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvs = cb->get_rtv();
 	context.set_render_targets(1, &rtvs);
 	context.set_viewport_and_scissor(viewport, scissor);
 	context.clear_color(*cb, nullptr);
 	//TODO:»æÖÆÈý½ÇÐÎ
-
 	context.transition_resource(*cb, D3D12_RESOURCE_STATE_PRESENT, false);
 
 	context.finish(true);
