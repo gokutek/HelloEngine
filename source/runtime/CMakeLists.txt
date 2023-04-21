@@ -57,6 +57,8 @@ add_library(lib_engine
     core/command_context_manager.cpp
     core/root_signature.h
     core/root_signature.cpp
+    core/pipeline_state.h
+    core/pipeline_state.cpp
     )
 
 target_precompile_headers(lib_engine PRIVATE core/pch.h)
