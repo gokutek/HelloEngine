@@ -85,3 +85,6 @@ barrier_desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 barrier_desc.Transition.StateAfter = old_state; //应该是StateBefore
 barrier_desc.Transition.StateAfter = new_state;
 ```
+
+## hlsl、cso、头文件
+shader编译器将hlsl编译成cso，并可生成一个C++头文件，里面包含里cso里的二进制数据定义。
