@@ -41,18 +41,19 @@ void display::initialize()
 	desc1.Windowed = TRUE;
 
 	ComPtr<IDXGISwapChain1> swapChain;
-	ASSERT_SUCCEEDED(factory->CreateSwapChainForHwnd(get_rhi()->command_manager_.get_graphics_queue().get_command_queue(), g_hWnd, &desc, &desc1, nullptr, &swapChain));
+	ID3D12CommandQueue* cmd_queue = get_rhi()->command_manager_.get_graphics_queue().get_command_queue();
+	ASSERT_SUCCEEDED(factory->CreateSwapChainForHwnd(cmd_queue, g_hWnd, &desc, &desc1, nullptr, &swapChain));
 	swapChain.As(&rhi_swap_chain_);
 	current_buffer_ = rhi_swap_chain_->GetCurrentBackBufferIndex();
 
 	//TODO: 支持HDR输出?
 
-	//初始化各个后台缓存
+	//初始化各个后台缓存，创建对应的RTV
 	display_plane_.reset(new color_buffer[SWAP_CHAIN_BUFFER_COUNT]);
 	for (int i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 	{
 		ComPtr<ID3D12Resource> buffer;
-		rhi_swap_chain_->GetBuffer(i, IID_PPV_ARGS(&buffer));
+		ASSERT_SUCCEEDED(rhi_swap_chain_->GetBuffer(i, IID_PPV_ARGS(&buffer)));
 		display_plane_[i].create_from_swap_chain(L"Primary SwapChain Buffer", buffer.Detach());
 	}
 

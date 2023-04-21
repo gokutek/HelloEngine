@@ -26,12 +26,12 @@ void command_queue::create(ID3D12Device* device)
 	ASSERT(allocator_pool_.size() == 0);
 
 	//创建queue
-	D3D12_COMMAND_QUEUE_DESC queue_desc;
+	D3D12_COMMAND_QUEUE_DESC queue_desc = {};
 	queue_desc.Type = type_;
 	queue_desc.Priority = 0;
 	queue_desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
 	queue_desc.NodeMask = 1; //???
-	device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&rhi_command_queue_));
+	ASSERT_SUCCEEDED(device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&rhi_command_queue_)));
 	rhi_command_queue_->SetName(L"command_queue::rhi_command_queue_");
 
 	//创建fence
