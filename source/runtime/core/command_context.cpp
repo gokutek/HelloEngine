@@ -106,7 +106,7 @@ void command_context::transition_resource(gpu_resource& resource, D3D12_RESOURCE
 		barrier_desc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier_desc.Transition.pResource = resource.get_resource();
 		barrier_desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-		barrier_desc.Transition.StateAfter = old_state;
+		barrier_desc.Transition.StateBefore = old_state;
 		barrier_desc.Transition.StateAfter = new_state;
 
 		if (new_state == resource.get_transitioning_state())
