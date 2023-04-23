@@ -1,9 +1,9 @@
 # ==============================================================================
 # 公共头文件
 # ==============================================================================
-SET(THIRD_PARTY_ROOT_PATH ${CMAKE_HOME_DIRECTORY}/third_party/)
-INCLUDE_DIRECTORIES(${THIRD_PARTY_ROOT_PATH}/DirectX-Headers/include/directx)
-INCLUDE_DIRECTORIES(${CMAKE_HOME_DIRECTORY}/source/runtime)
+set(THIRD_PARTY_ROOT_PATH ${CMAKE_HOME_DIRECTORY}/third_party/)
+include_directories(${THIRD_PARTY_ROOT_PATH}/DirectX-Headers/include/directx)
+include_directories(${CMAKE_HOME_DIRECTORY}/source/runtime)
 
 # ==============================================================================
 # 运行时库
