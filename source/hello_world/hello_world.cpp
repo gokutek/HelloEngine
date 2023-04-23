@@ -2,8 +2,8 @@
 #include "core/graphics_context.h"
 #include "core/utility.h"
 #include "core/graphics_core.h"
-#include "hello_world_vs.h"
-#include "hello_world_ps.h"
+#include "cso/hello_world_vs.h"
+#include "cso/hello_world_ps.h"
 #include <string>
 #include <memory>
 

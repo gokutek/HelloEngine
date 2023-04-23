@@ -13,8 +13,18 @@ set(TARGET_SRC
     hello_world_ps.hlsl
     )
 
-set_source_files_properties(hello_world_vs.hlsl PROPERTIES VS_SHADER_TYPE Vertex VS_SHADER_MODEL 6.6 VS_SHADER_ENTRYPOINT main VS_SHADER_OUTPUT_HEADER_FILE ./hello_world_vs.h VS_SHADER_VARIABLE_NAME hello_world_vs_cso)
-set_source_files_properties(hello_world_ps.hlsl PROPERTIES VS_SHADER_TYPE Pixel VS_SHADER_MODEL 6.6 VS_SHADER_ENTRYPOINT main VS_SHADER_OUTPUT_HEADER_FILE ./hello_world_ps.h VS_SHADER_VARIABLE_NAME hello_world_ps_cso)
+# 设置shader源文件的属性    
+function(set_hlsl_file_prop fname shader_type)
+    set_source_files_properties(${fname}.hlsl PROPERTIES 
+        VS_SHADER_TYPE ${shader_type} 
+        VS_SHADER_MODEL 6.6 
+        VS_SHADER_ENTRYPOINT main 
+        VS_SHADER_OUTPUT_HEADER_FILE ./cso/${fname}.h 
+        VS_SHADER_VARIABLE_NAME ${fname}_cso)
+endfunction()
+
+set_hlsl_file_prop(hello_world_vs Vertex)
+set_hlsl_file_prop(hello_world_ps Pixel)
 
 add_executable(${TARGET} WIN32 ${TARGET_SRC})
 target_link_libraries(${TARGET} lib_engine)
