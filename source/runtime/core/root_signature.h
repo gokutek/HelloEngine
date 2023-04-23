@@ -23,6 +23,7 @@ public:
 	D3D12_ROOT_PARAMETER& get_root_parameter(size_t index);
 	void init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility);
 	void finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS flags);
+	ID3D12RootSignature* get_signature() const;
 
 private:
 	static std::unordered_map<size_t, ComPtr<ID3D12RootSignature> > rhi_root_signatures_map_;
@@ -38,3 +39,8 @@ private:
 	uint32_t descriptor_table_size_[16];
 	ComPtr<ID3D12RootSignature> rhi_root_signature_;
 };
+
+inline ID3D12RootSignature* root_signature::get_signature() const
+{ 
+	return rhi_root_signature_.Get(); 
+}
