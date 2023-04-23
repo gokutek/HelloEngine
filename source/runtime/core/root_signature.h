@@ -20,7 +20,7 @@ public:
 
 	void destroy_all();
 	void reset(uint32_t root_params_num, uint32_t static_samplers_num);
-	D3D12_ROOT_PARAMETER& get_root_parameter(size_t index);
+	root_parameter& get_root_parameter(size_t index);
 	void init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility);
 	void finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS flags);
 	ID3D12RootSignature* get_signature() const;

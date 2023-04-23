@@ -1,10 +1,6 @@
 #include "root_signature.h"
 #include "graphics_core.h"
-
-class root_parameter : public D3D12_ROOT_PARAMETER
-{
-public:
-};
+#include "root_parameter.h"
 
 std::unordered_map<size_t, ComPtr<ID3D12RootSignature> > root_signature::rhi_root_signatures_map_;
 
@@ -40,7 +36,7 @@ void root_signature::reset(uint32_t root_params_num, uint32_t static_samplers_nu
 	sampler_array_.reset(new D3D12_STATIC_SAMPLER_DESC[static_samplers_num]);
 }
 
-D3D12_ROOT_PARAMETER& root_signature::get_root_parameter(size_t index)
+root_parameter& root_signature::get_root_parameter(size_t index)
 {
 	ASSERT(index < parameters_num_);
 	return param_array_[index];
@@ -97,7 +93,7 @@ void root_signature::finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS fl
 
 	D3D12_ROOT_SIGNATURE_DESC root_desc;
 	root_desc.NumParameters = parameters_num_;
-	root_desc.pParameters = param_array_.get();
+	root_desc.pParameters = (D3D12_ROOT_PARAMETER*)param_array_.get();
 	root_desc.NumStaticSamplers = samplers_num_;
 	root_desc.pStaticSamplers = sampler_array_.get();
 	root_desc.Flags = flags;
