@@ -1,6 +1,6 @@
 # 打印日志(可在CMake界面的下方输出窗口查看)
 function(print_string str)
-    message(STATUS "${str}")
+    message(STATUS "[HelloEngine] ${str}")
 endfunction()
 
 ###############################################################################
