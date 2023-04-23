@@ -21,6 +21,8 @@ function(set_hlsl_file_prop fname shader_type)
         VS_SHADER_ENTRYPOINT main 
         VS_SHADER_OUTPUT_HEADER_FILE ./cso/${fname}.h 
         VS_SHADER_VARIABLE_NAME ${fname}_cso)
+       
+    source_group("Shader Files" FILES ${fname}.hlsl)
 endfunction()
 
 set_hlsl_file_prop(hello_world_vs Vertex)
