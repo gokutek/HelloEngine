@@ -60,15 +60,17 @@ void hello_world_app::render_scene()
 	scissor.right = 1280;
 	scissor.bottom = 720;
 
-	color_buffer* cb = get_rhi()->display_.get_current_color_buffer();
+	graphics* rhi = get_rhi();
+
+	color_buffer* cb = rhi->display_.get_current_color_buffer();
 	cb->set_clear_color(color(0, 0, 1, 1));
 
-	graphics_context& context = graphics_context::begin(L"Scene Render");
-	context.transition_resource(*cb, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
+	graphics_context* context = rhi->context_manager_.allocate_graphics_context(L"Scene Render");
+	context->transition_resource(*cb, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
 	//context.set_viewport_and_scissor(viewport, scissor);
-	context.clear_color(*cb, nullptr);
+	context->clear_color(*cb, nullptr);
 	//TODO:»æÖÆÈý½ÇÐÎ
-	context.transition_resource(*cb, D3D12_RESOURCE_STATE_PRESENT, false);
+	context->transition_resource(*cb, D3D12_RESOURCE_STATE_PRESENT, false);
 
-	context.finish(true);
+	context->finish(true);
 }

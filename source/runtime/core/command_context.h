@@ -15,8 +15,6 @@ class command_list_manager;
 class command_context
 {
 public:
-	static command_context& begin(wchar_t const* id);
-
 	command_context(D3D12_COMMAND_LIST_TYPE type);
 	virtual ~command_context();
 

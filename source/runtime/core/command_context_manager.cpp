@@ -1,7 +1,13 @@
 #include "command_context_manager.h"
 #include "utility.h"
+#include "graphics_context.h"
+#include "compute_context.h"
 
 command_context_manager::command_context_manager()
+{
+}
+
+command_context_manager::~command_context_manager()
 {
 }
 
@@ -14,7 +20,16 @@ command_context* command_context_manager::allocate_context(D3D12_COMMAND_LIST_TY
 	std::queue<command_context*>& queue = free_pools_[index];
 	if (queue.empty())
 	{
-		context = new command_context(type);
+		switch (type)
+		{
+		case D3D12_COMMAND_LIST_TYPE_DIRECT:
+			context = new graphics_context(type);
+			break;
+		case D3D12_COMMAND_LIST_TYPE_COMPUTE:
+			context = new compute_context(type);
+			break;
+		}
+		ASSERT(context);
 		context_pools_[index].emplace_back(context);
 		context->initialize();
 	}
@@ -26,6 +41,13 @@ command_context* command_context_manager::allocate_context(D3D12_COMMAND_LIST_TY
 	}
 
 	ASSERT(context);
+	return context;
+}
+
+graphics_context* command_context_manager::allocate_graphics_context(wchar_t const* id)
+{
+	graphics_context* context = (graphics_context*)allocate_context(D3D12_COMMAND_LIST_TYPE_DIRECT);
+	context->set_id(id);
 	return context;
 }
 

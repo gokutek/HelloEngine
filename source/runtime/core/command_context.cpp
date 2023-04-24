@@ -3,24 +3,25 @@
 #include "graphics_core.h"
 #include "utility.h"
 
-command_context& command_context::begin(wchar_t const* id)
-{
-	command_context* new_context = get_rhi()->context_manager_.allocate_context(D3D12_COMMAND_LIST_TYPE_DIRECT);
-	new_context->set_id(id);
-	//TODO: profiling
-	return *new_context;
-}
+//command_context& command_context::begin(wchar_t const* id)
+//{
+//	command_context* new_context = get_rhi()->context_manager_.allocate_context(D3D12_COMMAND_LIST_TYPE_DIRECT);
+//	new_context->set_id(id);
+//	//TODO: profiling
+//	return *new_context;
+//}
 
-command_context::command_context(D3D12_COMMAND_LIST_TYPE type) :
-	type_(type)
+command_context::command_context(D3D12_COMMAND_LIST_TYPE type) 
+	: type_(type),
+	owning_manager_(nullptr),
+	rhi_command_list_(nullptr),
+	rhi_current_allocator_(nullptr),
+	rhi_cur_graphics_root_signature_(nullptr),
+	rhi_cur_compute_root_signature_(nullptr),
+	rhi_cur_pipeline_state_(nullptr),
+	num_barriers_to_flush_(0)
 {
-	owning_manager_ = nullptr;
-	rhi_command_list_ = nullptr;
-	rhi_current_allocator_ = nullptr;
-	rhi_cur_graphics_root_signature_ = nullptr;
-	rhi_cur_compute_root_signature_ = nullptr;
-	rhi_cur_pipeline_state_ = nullptr;
-	num_barriers_to_flush_ = 0;
+	ZeroMemory(resource_barrier_buffers_, sizeof(resource_barrier_buffers_));
 }
 
 command_context::~command_context()

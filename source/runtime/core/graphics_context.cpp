@@ -1,12 +1,5 @@
 #include "graphics_context.h"
 
-graphics_context& graphics_context::begin(wchar_t const* id)
-{
-	//FIXME: 这里原初的设计不是很好
-	graphics_context* context = (graphics_context*)&command_context::begin(id);
-	return *context;
-}
-
 void graphics_context::clear_uav(gpu_buffer& target)
 {
 	//TODO:

@@ -8,7 +8,7 @@
 class graphics_context : public command_context
 {
 public:
-	static graphics_context& begin(wchar_t const* id);
+	using command_context::command_context;
 
 	void clear_uav(gpu_buffer& target);
 	void clear_uav(color_buffer& target);
@@ -27,5 +27,3 @@ public:
 	void draw(uint32_t vertex_count, uint32_t vertex_start_offset);
 	void draw_indexed(uint32_t index_count, uint32_t start_index_location, int base_vertex_location);
 };
-
-static_assert(sizeof(graphics_context) == sizeof(command_context));
