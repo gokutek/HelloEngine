@@ -28,16 +28,19 @@ public:
 private:
 	static std::unordered_map<size_t, ComPtr<ID3D12RootSignature> > rhi_root_signatures_map_;
 
-	bool finalized_;
 	uint32_t parameters_num_;
 	std::unique_ptr<root_parameter[]> param_array_;
-	uint32_t samplers_num_;
+	
 	std::unique_ptr<D3D12_STATIC_SAMPLER_DESC[]> sampler_array_;
+	uint32_t samplers_num_;
 	uint32_t init_static_samplers_num_;
+
 	uint32_t descriptor_table_bmp_;
 	uint32_t sampler_table_bmp_;
 	uint32_t descriptor_table_size_[16];
+	
 	ComPtr<ID3D12RootSignature> rhi_root_signature_;
+	bool finalized_;
 };
 
 inline ID3D12RootSignature* root_signature::get_signature() const
