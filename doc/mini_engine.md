@@ -2,6 +2,9 @@
 `CommandContext`有`GraphicsContext`和`ComputeContext`两个子类，子类中都不含任何成员
 变量。基类的析构函数也不是`virtual`的。
 
+## 资源格式
+`DXGI_FORMAT`枚举定义了资源格式。
+
 ## DX12术语
 * View：一个Buffer可以对应多个不同的View
 * CBV：Constant Buffer View
@@ -18,6 +21,14 @@ void CreateDepthStencilView(
 );
 ```
 这个函数的返回值是void，View将创建在第3个handle指向的区域里。
+
+创建View时指定的`Format`可不同于底层Buffer的`Format`，在读取的时候将会自动转换，前提
+是两个格式能兼容转换。例如以下几种格式是可以转换的：
+* DXGI_FORMAT_R32G32B32_FLOAT
+* DXGI_FORMAT_R32G32B32_UINT
+* DXGI_FORMAT_R32G32B32_SINT
+
+创建资源时可指定typeless的格式，但创建视图时不能。
 
 ## Root signature
 

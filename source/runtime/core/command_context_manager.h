@@ -1,12 +1,11 @@
 #pragma once
 
+#include "graphics_context.h"
+#include "compute_context.h"
 #include <mutex>
 #include <vector>
 #include <queue>
 #include <memory>
-
-class command_context;
-class graphics_context;
 
 class command_context_manager
 {

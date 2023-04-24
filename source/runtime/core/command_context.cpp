@@ -85,11 +85,10 @@ void command_context::reset()
 	bind_descriptor_heaps();
 }
 
-ID3D12GraphicsCommandList* command_context::get_command_list()
+void command_context::initialize_buffer(gpu_buffer& dest, const void* data, size_t num_bytes, size_t dest_offset)
 {
-	//TODO:
-	assert(false);
-	return nullptr;
+	//需要将CPU的内存先Upload到GPU，再进行一次GPU上的拷贝
+	assert(false && "not impl yet");
 }
 
 void command_context::transition_resource(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate)

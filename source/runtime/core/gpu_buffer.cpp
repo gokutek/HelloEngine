@@ -1,5 +1,16 @@
 #include "gpu_buffer.h"
 #include "graphics_core.h"
+#include "command_context_manager.h"
+
+gpu_buffer::gpu_buffer()
+    : num_elements_(0),
+    element_size_(0),
+    buffer_size_(0),
+    resource_flags_(D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS)
+{
+    uav_handle_.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+    srv_handle_.ptr = D3D12_GPU_VIRTUAL_ADDRESS_UNKNOWN;
+}
 
 D3D12_RESOURCE_DESC gpu_buffer::describe_buffer() const
 {
@@ -51,7 +62,8 @@ int gpu_buffer::create(wchar_t const* name, uint32_t num_elements, uint32_t elem
 
     if (initial_data)
     {
-        assert(false && "not impl yet");
+        command_context* context = get_rhi()->context_manager_.allocate_graphics_context(L"gpu_buffer::create");
+        context->initialize_buffer(*this, initial_data, buffer_size_);
     }
 
     return 0;
@@ -61,7 +73,6 @@ int gpu_buffer::create(wchar_t const* name, uint32_t num_elements, uint32_t elem
 {
     create_buffer_and_view(name, num_elements, element_size);
 
-    // TODO: copy init data
     assert(false && "not impl yet");
 
     return 0;

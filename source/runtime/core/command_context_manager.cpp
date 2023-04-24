@@ -1,7 +1,5 @@
 #include "command_context_manager.h"
 #include "utility.h"
-#include "graphics_context.h"
-#include "compute_context.h"
 
 command_context_manager::command_context_manager()
 {
