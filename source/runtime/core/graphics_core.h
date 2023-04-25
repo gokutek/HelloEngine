@@ -3,7 +3,6 @@
 #include "buffer_manager.h"
 #include "command_list_manager.h"
 #include "command_context_manager.h"
-#include "descriptor_heap.h"
 #include "descriptor_allocator.h"
 #include "display.h"
 #include <memory>

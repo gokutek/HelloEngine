@@ -6,6 +6,7 @@
 
 /*
 ===============================================================================
+描述符堆中的句柄，指向一个描述符。亦可理解为数组中一个元素的指针。
 ===============================================================================
 */
 class descriptor_handle
@@ -32,6 +33,10 @@ private:
 
 /*
 ===============================================================================
+Heap是一个数组，因此需要指定元素类型(描述符堆类型)、数组长度；
+HANDLE就是一个指针；
+有了堆的起始内存地址，可以求出任一元素的地址；
+描述符堆类型一共有4种(各种View以及Sampler)；
 ===============================================================================
 */
 class descriptor_heap
@@ -56,10 +61,10 @@ public:
 private:
 	ComPtr<ID3D12DescriptorHeap> rhi_heap_;
 	D3D12_DESCRIPTOR_HEAP_DESC heap_desc_;
-	uint32_t descriptor_size_;
-	uint32_t free_descriptors_num_;
-	descriptor_handle first_handle_;
-	descriptor_handle next_free_handle_;
+	uint32_t descriptor_size_; //元素大小
+	uint32_t free_descriptors_num_; //未使用的描述符个数
+	descriptor_handle first_handle_; //堆的起始地址
+	descriptor_handle next_free_handle_; //可分配的描述符句柄
 };
 
 #include "descriptor_heap.inl"
