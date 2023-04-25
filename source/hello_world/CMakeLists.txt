@@ -13,7 +13,7 @@ set(TARGET_SRC
     hello_world_ps.hlsl
     )
 
-# ÉèÖÃshaderÔ´ÎÄ¼şµÄÊôĞÔ    
+# è®¾ç½®shaderæºæ–‡ä»¶çš„å±æ€§    
 function(set_hlsl_file_prop fname shader_type)
     set_source_files_properties(${fname}.hlsl PROPERTIES 
         VS_SHADER_TYPE ${shader_type} 

@@ -20,12 +20,12 @@ command_queue::~command_queue()
 
 void command_queue::create(ID3D12Device* device)
 {
-	//È·±£²»ÊÇÖØ¸´µ÷ÓÃcreate...
+	//ç¡®ä¿ä¸æ˜¯é‡å¤è°ƒç”¨create...
 	ASSERT(device != nullptr);
 	ASSERT(!is_ready());
 	ASSERT(allocator_pool_.size() == 0);
 
-	//´´½¨queue
+	//åˆ›å»ºqueue
 	D3D12_COMMAND_QUEUE_DESC queue_desc = {};
 	queue_desc.Type = type_;
 	queue_desc.Priority = 0;
@@ -34,7 +34,7 @@ void command_queue::create(ID3D12Device* device)
 	ASSERT_SUCCEEDED(device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&rhi_command_queue_)));
 	rhi_command_queue_->SetName(L"command_queue::rhi_command_queue_");
 
-	//´´½¨fence
+	//åˆ›å»ºfence
 	device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
 	fence_->SetName(L"command_queue::fence_");
 	fence_->Signal((uint64_t)type_ << 56);
@@ -127,10 +127,10 @@ uint64_t command_queue::execute_command_list(ID3D12CommandList* list)
 
 	ASSERT_SUCCEEDED(cmd_list->Close());
 
-	//Ìá½»list
+	//æäº¤list
 	rhi_command_queue_->ExecuteCommandLists(1, &list);
 
-	//ÔÚGPU²àÉèÖÃfenceµÄÖµ£¨Ïò¶ÓÁÐÖÐ²åÈëÒ»¸ösigalÃüÁî£©
+	//åœ¨GPUä¾§è®¾ç½®fenceçš„å€¼ï¼ˆå‘é˜Ÿåˆ—ä¸­æ’å…¥ä¸€ä¸ªsigalå‘½ä»¤ï¼‰
 	rhi_command_queue_->Signal(fence_, next_fence_value_);
 
 	return next_fence_value_++;

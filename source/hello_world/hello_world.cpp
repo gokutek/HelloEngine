@@ -16,11 +16,11 @@ static bool start_unit_test()
 	_BitScanReverse(&HighBit, 0xff);
 	ASSERT(HighBit == 7);
 
-	//new³¤¶ÈÎª0µÄÊý×é£¬²»»á±ÀÀ£¡£
+	//newé•¿åº¦ä¸º0çš„æ•°ç»„ï¼Œä¸ä¼šå´©æºƒã€‚
 	auto* p = new std::string[0];
 	delete[] p;
 
-	//32Î»Óë64Î»½øÐÐÒì»ò
+	//32ä½ä¸Ž64ä½è¿›è¡Œå¼‚æˆ–
 	uint32_t v1 = 0;
 	uint64_t v2 = -1;
 	uint64_t x = v1 ^ v2;
@@ -35,7 +35,7 @@ void hello_world_app::startup()
 {
 	start_unit_test();
 
-	//TODO:¶¨ÒåÈý½ÇÐÎ
+	//TODO:å®šä¹‰ä¸‰è§’å½¢
 }
 
 void hello_world_app::cleanup()
@@ -69,7 +69,7 @@ void hello_world_app::render_scene()
 	context->transition_resource(*cb, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
 	//context.set_viewport_and_scissor(viewport, scissor);
 	context->clear_color(*cb, nullptr);
-	//TODO:»æÖÆÈý½ÇÐÎ
+	//TODO:ç»˜åˆ¶ä¸‰è§’å½¢
 	context->transition_resource(*cb, D3D12_RESOURCE_STATE_PRESENT, false);
 
 	context->finish(true);

@@ -10,7 +10,7 @@ class command_list_manager;
 
 /*
 ===============================================================================
-×ÓÀàÓĞgraphics_contextºÍcompute_context¡£
+å­ç±»æœ‰graphics_contextå’Œcompute_contextã€‚
 ===============================================================================
 */
 class command_context

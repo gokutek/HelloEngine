@@ -6,7 +6,7 @@
 
 /*
 ===============================================================================
-ÃèÊö·û¶ÑÖĞµÄ¾ä±ú£¬Ö¸ÏòÒ»¸öÃèÊö·û¡£Òà¿ÉÀí½âÎªÊı×éÖĞÒ»¸öÔªËØµÄÖ¸Õë¡£
+æè¿°ç¬¦å †ä¸­çš„å¥æŸ„ï¼ŒæŒ‡å‘ä¸€ä¸ªæè¿°ç¬¦ã€‚äº¦å¯ç†è§£ä¸ºæ•°ç»„ä¸­ä¸€ä¸ªå…ƒç´ çš„æŒ‡é’ˆã€‚
 ===============================================================================
 */
 class descriptor_handle
@@ -32,10 +32,10 @@ private:
 };
 
 /**
- * @brief HeapÊÇÒ»¸öÊı×é£¬Òò´ËĞèÒªÖ¸¶¨ÔªËØÀàĞÍ(ÃèÊö·û¶ÑÀàĞÍ)¡¢Êı×é³¤¶È£»
- * HANDLE¾ÍÊÇÒ»¸öÖ¸Õë£»
- * ÓĞÁË¶ÑµÄÆğÊ¼ÄÚ´æµØÖ·£¬¿ÉÒÔÇó³öÈÎÒ»ÔªËØµÄµØÖ·£»
- * ÃèÊö·û¶ÑÀàĞÍÒ»¹²ÓĞ4ÖÖ(¸÷ÖÖViewÒÔ¼°Sampler)£»
+ * @brief Heapæ˜¯ä¸€ä¸ªæ•°ç»„ï¼Œå› æ­¤éœ€è¦æŒ‡å®šå…ƒç´ ç±»å‹(æè¿°ç¬¦å †ç±»å‹)ã€æ•°ç»„é•¿åº¦ï¼›
+ * HANDLEå°±æ˜¯ä¸€ä¸ªæŒ‡é’ˆï¼›
+ * æœ‰äº†å †çš„èµ·å§‹å†…å­˜åœ°å€ï¼Œå¯ä»¥æ±‚å‡ºä»»ä¸€å…ƒç´ çš„åœ°å€ï¼›
+ * æè¿°ç¬¦å †ç±»å‹ä¸€å…±æœ‰4ç§(å„ç§Viewä»¥åŠSampler)ï¼›
  * 
  * @see descriptor_allocator
  */
@@ -48,19 +48,19 @@ public:
 	void create(wchar_t const* debug_heap_name, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t max_count);
 	void destroy();
 
-	//ÊÇ·ñÓĞ¿ÉÓÃÊıÁ¿µÄÃèÊö·û
+	//æ˜¯å¦æœ‰å¯ç”¨æ•°é‡çš„æè¿°ç¬¦
 	bool has_available_space(uint32_t count);
-	//·ÖÅäÖ¸¶¨ÊıÁ¿µÄÃèÊö·û
+	//åˆ†é…æŒ‡å®šæ•°é‡çš„æè¿°ç¬¦
 	descriptor_handle alloc(uint32_t count);
 
-	//»ñÈ¡Ö¸¶¨Ë÷ÒıµÄÔªËØµÄ¾ä±ú
+	//è·å–æŒ‡å®šç´¢å¼•çš„å…ƒç´ çš„å¥æŸ„
 	descriptor_handle operator[](uint32_t index) const;
 
-	//Õâ¸öhandleÊÇµÚ¼¸¸öÔªËØ
+	//è¿™ä¸ªhandleæ˜¯ç¬¬å‡ ä¸ªå…ƒç´ 
 	uint32_t get_offset_of_handle(const descriptor_handle& handle);
-	//ÊÇ·ñÊÇÓĞĞ§µÄ¾ä±ú(Ö¸ÕëÊÇ·ñÔ½½ç)
+	//æ˜¯å¦æ˜¯æœ‰æ•ˆçš„å¥æŸ„(æŒ‡é’ˆæ˜¯å¦è¶Šç•Œ)
 	bool is_valid_handle(const descriptor_handle& handle) const;
-	//¶ÑÖĞÃ¿¸öÔªËØµÄ´óĞ¡
+	//å †ä¸­æ¯ä¸ªå…ƒç´ çš„å¤§å°
 	uint32_t get_descriptor_size() const;
 
 	ID3D12DescriptorHeap* get_heap_pointer() const;
@@ -68,10 +68,10 @@ public:
 private:
 	ComPtr<ID3D12DescriptorHeap> rhi_heap_;
 	D3D12_DESCRIPTOR_HEAP_DESC heap_desc_;
-	uint32_t descriptor_size_; //ÔªËØ´óĞ¡
-	uint32_t free_descriptors_num_; //Î´Ê¹ÓÃµÄÃèÊö·û¸öÊı
-	descriptor_handle first_handle_; //¶ÑµÄÆğÊ¼µØÖ·
-	descriptor_handle next_free_handle_; //¿É·ÖÅäµÄÃèÊö·û¾ä±ú
+	uint32_t descriptor_size_; //å…ƒç´ å¤§å°
+	uint32_t free_descriptors_num_; //æœªä½¿ç”¨çš„æè¿°ç¬¦ä¸ªæ•°
+	descriptor_handle first_handle_; //å †çš„èµ·å§‹åœ°å€
+	descriptor_handle next_free_handle_; //å¯åˆ†é…çš„æè¿°ç¬¦å¥æŸ„
 };
 
 #include "descriptor_heap.inl"

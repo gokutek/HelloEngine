@@ -18,8 +18,8 @@ DXGI_FORMAT pixel_buffer::get_base_format(DXGI_FORMAT format)
 {
     /*
     ===================================================
-    1. ´Ëº¯ÊıÊÇCTRL+CV¹ıÀ´µÄ£»
-    2. ·µ»ØµÄ¸ñÊ½¶¼´ø`_TYPELESS`ºó×º£»
+    1. æ­¤å‡½æ•°æ˜¯CTRL+CVè¿‡æ¥çš„ï¼›
+    2. è¿”å›çš„æ ¼å¼éƒ½å¸¦`_TYPELESS`åç¼€ï¼›
     ===================================================
     */
     switch (format)
@@ -69,7 +69,7 @@ DXGI_FORMAT pixel_buffer::get_base_format(DXGI_FORMAT format)
 
 D3D12_RESOURCE_DESC pixel_buffer::describe_tex_2d(uint32_t width, uint32_t height, uint16_t depth_or_array_size, uint32_t mip_level, DXGI_FORMAT format, uint32_t flags)
 {
-	//FIXME: ´Ë´¦µÄÉè¼ÆÃ²ËÆ²»ºÃ
+	//FIXME: æ­¤å¤„çš„è®¾è®¡è²Œä¼¼ä¸å¥½
 	width_ = width;
 	height_ = height;
 	array_size_ = depth_or_array_size;
@@ -96,7 +96,7 @@ void pixel_buffer::associate_with_resource(ID3D12Device* device, wchar_t const* 
     usage_state_ = current_state;
 
     D3D12_RESOURCE_DESC desc = resource->GetDesc();
-    width_ = (uint32_t)desc.Width; //FIXME: ¸Ä³Éuint64?
+    width_ = (uint32_t)desc.Width; //FIXME: æ”¹æˆuint64?
     height_ = desc.Height;
     array_size_ = desc.DepthOrArraySize;
     format_ = desc.Format;

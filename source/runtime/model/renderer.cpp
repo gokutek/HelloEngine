@@ -10,7 +10,7 @@
 
 void renderer::initialize_common_state()
 {
-    //¹âÕ¤»¯Ä¬ÈÏ·½Ê½
+    //å…‰æ …åŒ–é»˜è®¤æ–¹å¼
     rasterizer_default_.FillMode = D3D12_FILL_MODE_SOLID;
     rasterizer_default_.CullMode = D3D12_CULL_MODE_BACK;
     rasterizer_default_.FrontCounterClockwise = TRUE;
@@ -58,7 +58,7 @@ void renderer::initialize_common_state()
 
 int renderer::initialize()
 {
-    //³õÊ¼»¯Root Signature
+    //åˆå§‹åŒ–Root Signature
     root_signature_.reset(new root_signature(2, 0));//FIXME:
     root_signature_->get_root_parameter(0).init_as_constant_buffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
     root_signature_->get_root_parameter(1).init_as_constant_buffer(0, D3D12_SHADER_VISIBILITY_PIXEL);
@@ -67,7 +67,7 @@ int renderer::initialize()
     DXGI_FORMAT color_format = get_rhi()->buffer_manager_.scene_color_buffer->get_format();
     DXGI_FORMAT depth_format = get_rhi()->buffer_manager_.scene_depth_buffer->get_format();
 
-	//³õÊ¼»¯Ä¬ÈÏPSO
+	//åˆå§‹åŒ–é»˜è®¤PSO
 	default_pso_.reset(new graphics_pso(L"renderer: Default PSO"));
     default_pso_->set_root_signature(root_signature_.get());
     default_pso_->set_rasterizer_state(rasterizer_default_);

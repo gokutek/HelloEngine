@@ -17,20 +17,20 @@ struct color
 	void set_b(float b);
 	void set_a(float a);
 
-	//TODO: ²»Í¬ÑÕÉ«¸ñÊ½µÄ×ª»»£¬ÈçsRGB
+	//TODO: ä¸åŒé¢œè‰²æ ¼å¼çš„è½¬æ¢ï¼Œå¦‚sRGB
 	float* get_ptr()
 	{
 		return value_.f;
 	}
 
 private:
-	DirectX::XMVECTORF32 value_; ///< ¹éÒ»»¯ºóµÄRGBA
+	DirectX::XMVECTORF32 value_; ///< å½’ä¸€åŒ–åçš„RGBA
 };
 
 inline color::color(float r, float g, float b, float a)
 {
 	value_.v = DirectX::XMVectorSet(r, g, b, a);
-	//TODO: ÓëÖ±½ÓÉèÖÃvalue_.fµÄ¶Ô±È
+	//TODO: ä¸ç›´æ¥è®¾ç½®value_.fçš„å¯¹æ¯”
 }
 
 inline float color::get_r() const

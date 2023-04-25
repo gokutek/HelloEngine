@@ -9,7 +9,7 @@ static const uint32_t VENDORID_INTEL	= 0x8086;
 static bool g_bTypedUAVLoadSupport_R11G11B10_FLOAT = false;
 static bool g_bTypedUAVLoadSupport_R16G16B16A16_FLOAT = false;
 
-// ¼ì²éÊÇ·ñÖ§³Ö¹âÏß×·×Ù?
+// æ£€æŸ¥æ˜¯å¦æ”¯æŒå…‰çº¿è¿½è¸ª?
 static bool IsDirectXRaytracingSupported(ID3D12Device* testDevice)
 {
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 featureSupport = {};
