@@ -31,14 +31,14 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle_;
 };
 
-/*
-===============================================================================
-Heap是一个数组，因此需要指定元素类型(描述符堆类型)、数组长度；
-HANDLE就是一个指针；
-有了堆的起始内存地址，可以求出任一元素的地址；
-描述符堆类型一共有4种(各种View以及Sampler)；
-===============================================================================
-*/
+/**
+ * @brief Heap是一个数组，因此需要指定元素类型(描述符堆类型)、数组长度；
+ * HANDLE就是一个指针；
+ * 有了堆的起始内存地址，可以求出任一元素的地址；
+ * 描述符堆类型一共有4种(各种View以及Sampler)；
+ * 
+ * @see descriptor_allocator
+ */
 class descriptor_heap
 {
 public:
@@ -48,15 +48,22 @@ public:
 	void create(wchar_t const* debug_heap_name, D3D12_DESCRIPTOR_HEAP_TYPE type, uint32_t max_count);
 	void destroy();
 
+	//是否有可用数量的描述符
 	bool has_available_space(uint32_t count);
+	//分配指定数量的描述符
 	descriptor_handle alloc(uint32_t count);
 
+	//获取指定索引的元素的句柄
 	descriptor_handle operator[](uint32_t index) const;
 
+	//这个handle是第几个元素
 	uint32_t get_offset_of_handle(const descriptor_handle& handle);
+	//是否是有效的句柄(指针是否越界)
 	bool is_valid_handle(const descriptor_handle& handle) const;
-	ID3D12DescriptorHeap* get_heap_pointer() const;
+	//堆中每个元素的大小
 	uint32_t get_descriptor_size() const;
+
+	ID3D12DescriptorHeap* get_heap_pointer() const;
 
 private:
 	ComPtr<ID3D12DescriptorHeap> rhi_heap_;

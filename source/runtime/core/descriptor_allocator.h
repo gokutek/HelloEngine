@@ -11,6 +11,8 @@ Hanlde可以理解为数组中某个元素的指针；
 Handle分CPU和GPU，它们的地址是不一样的？
 
 FIXME: 几个static成员是否可以改成非static的？
+
+@see descriptor_heap
 ===============================================================================
 */
 class descriptor_allocator
