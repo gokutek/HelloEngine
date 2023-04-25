@@ -22,11 +22,6 @@ add_library(lib_model
 # 设置shader文件的分组
 source_group("Shader Files" FILES ${HLSL_SRC_FILES})
 
-# 设置shader源文件的属性    
-function(set_hlsl_file_prop fname shader_type)
-    set_source_files_properties(shaders/${fname}.hlsl PROPERTIES VS_SHADER_TYPE ${shader_type} VS_SHADER_MODEL 6.6 VS_SHADER_ENTRYPOINT main VS_SHADER_OUTPUT_HEADER_FILE ./cso/${fname}.h VS_SHADER_VARIABLE_NAME ${fname}_cso)
-endfunction()
-
 set(MANUAL_SET_HLSL 0)
 
 if(${MANUAL_SET_HLSL} EQUAL 0)

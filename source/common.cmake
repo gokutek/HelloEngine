@@ -4,10 +4,25 @@ function(print_string str)
 endfunction()
 
 ###############################################################################
+# 设置shader源文件的属性
+# @fname 文件名，不含扩展名，不含目录名
+# @shader_type 着色器类型
+###############################################################################
+function(set_hlsl_file_prop fname shader_type)
+    set_source_files_properties(shaders/${fname}.hlsl PROPERTIES
+    VS_SHADER_TYPE ${shader_type}
+    VS_SHADER_MODEL 6.6
+    VS_SHADER_ENTRYPOINT main
+    VS_SHADER_OUTPUT_HEADER_FILE ./cso/${fname}.h
+    VS_SHADER_VARIABLE_NAME ${fname}_cso)
+endfunction()
+
+###############################################################################
 # 遍历目录下的hlsl文件，调用上面的函数设置他们的属性。
 # 目的是避免新增hlsl需要类似下面的手动调用：
 #   set_hlsl_file_prop(default_vs Vertex)
 #   set_hlsl_file_prop(default_ps Pixel)
+# @dir 要遍历的目录
 ###############################################################################
 function(batch_set_hlsl_file_props dir)
     print_string("Search in '${dir}' ...")
