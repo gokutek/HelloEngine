@@ -1,4 +1,4 @@
-#include "hello_world.h"
+﻿#include "hello_world.h"
 #include "core/graphics_context.h"
 #include "core/utility.h"
 #include "core/graphics_core.h"

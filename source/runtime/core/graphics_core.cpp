@@ -1,4 +1,4 @@
-#include "graphics_core.h"
+﻿#include "graphics_core.h"
 #include "util/command_line_arg.h"
 #include "utility.h"
 

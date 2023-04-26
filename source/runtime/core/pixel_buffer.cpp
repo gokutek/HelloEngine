@@ -1,4 +1,4 @@
-#include "pixel_buffer.h"
+﻿#include "pixel_buffer.h"
 #include "utility.h"
 
 pixel_buffer::pixel_buffer() :

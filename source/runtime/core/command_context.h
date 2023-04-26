@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "pch.h"
 #include "gpu_resource.h"
@@ -8,11 +8,11 @@
 
 class command_list_manager;
 
-/*
-===============================================================================
-子类有graphics_context和compute_context。
-===============================================================================
-*/
+/**
+ * @brief 在每一帧记录渲染命令时，都需要一个command_context。
+ * @see graphics_context
+ * @see compute_context
+ */
 class command_context
 {
 public:
