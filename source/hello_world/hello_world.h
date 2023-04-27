@@ -1,6 +1,10 @@
 #pragma once
 
 #include "core/game_core.h"
+#include <DirectXMath.h>
+#include <memory>
+
+class static_mesh;
 
 class hello_world_app : public game_module
 {

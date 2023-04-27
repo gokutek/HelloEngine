@@ -2,39 +2,34 @@
 #include "core/graphics_context.h"
 #include "core/utility.h"
 #include "core/graphics_core.h"
+#include "core/byte_address_buffer.h"
 #include "cso/hello_world_vs.h"
 #include "cso/hello_world_ps.h"
 #include <string>
 #include <memory>
 
-static bool start_unit_test()
+struct mesh_vertex
 {
-	unsigned long HighBit;
-	_BitScanReverse(&HighBit, 1);
-	ASSERT(HighBit == 0);
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 color;
+};
 
-	_BitScanReverse(&HighBit, 0xff);
-	ASSERT(HighBit == 7);
+class static_mesh
+{
+public:
+	void render();
 
-	//new长度为0的数组，不会崩溃。
-	auto* p = new std::string[0];
-	delete[] p;
+	byte_address_buffer* vertex_buffer;
+};
 
-	//32位与64位进行异或
-	uint32_t v1 = 0;
-	uint64_t v2 = -1;
-	uint64_t x = v1 ^ v2;
-
-	std::hash<uint32_t> h;
-	size_t hv = h(123);
-
-	return true;
+static std::shared_ptr<static_mesh> load_static_mesh()
+{
+	std::shared_ptr<static_mesh> mesh(new static_mesh());
+	return mesh;
 }
 
 void hello_world_app::startup()
 {
-	start_unit_test();
-
 	//TODO:定义三角形
 }
 
@@ -62,15 +57,17 @@ void hello_world_app::render_scene()
 
 	graphics* rhi = get_rhi();
 
-	color_buffer* cb = rhi->display_.get_current_color_buffer();
-	cb->set_clear_color(color(0, 0, 1, 1));
+	color_buffer* back_buffer = rhi->display_.get_current_color_buffer();
+	back_buffer->set_clear_color(color(0, 0, 1, 1));
 
 	graphics_context* context = rhi->context_manager_.allocate_graphics_context(L"Scene Render");
-	context->transition_resource(*cb, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
-	//context.set_viewport_and_scissor(viewport, scissor);
-	context->clear_color(*cb, nullptr);
+	context->transition_resource(*back_buffer, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
+	context->set_viewport_and_scissor(viewport, scissor);
+	context->clear_color(*back_buffer, nullptr);
+
 	//TODO:绘制三角形
-	context->transition_resource(*cb, D3D12_RESOURCE_STATE_PRESENT, false);
+
+	context->transition_resource(*back_buffer, D3D12_RESOURCE_STATE_PRESENT, false);
 
 	context->finish(true);
 }

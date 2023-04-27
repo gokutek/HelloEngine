@@ -1,12 +1,11 @@
-#pragma once
+﻿#pragma once
 
 #include "pch.h"
 #include "gpu_buffer.h"
 
-/*
-===============================================================================
-===============================================================================
-*/
+/**
+ * @brief
+ */
 class byte_address_buffer : public gpu_buffer
 {
 public:

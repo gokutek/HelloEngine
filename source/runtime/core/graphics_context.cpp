@@ -44,22 +44,32 @@ void graphics_context::set_viewport_and_scissor(const D3D12_VIEWPORT& viewport, 
 	rhi_command_list_->RSSetScissorRects(1, &rect);
 }
 
+void graphics_context::set_primitive_topology(D3D12_PRIMITIVE_TOPOLOGY topology)
+{
+	rhi_command_list_->IASetPrimitiveTopology(topology);
+}
+
 void graphics_context::set_index_buffer(D3D12_INDEX_BUFFER_VIEW const& view)
 {
-	//TODO:
+	rhi_command_list_->IASetIndexBuffer(&view);
 }
 
 void graphics_context::set_vertex_buffer(uint32_t slot, D3D12_VERTEX_BUFFER_VIEW const& view)
 {
-	//TODO:
+	rhi_command_list_->IASetVertexBuffers(slot, 1, &view);
 }
 
 void graphics_context::draw(uint32_t vertex_count, uint32_t vertex_start_offset)
 {
-	//TODO:
+	draw_instanced(vertex_count, 1, vertex_start_offset, 0);
 }
 
 void graphics_context::draw_indexed(uint32_t index_count, uint32_t start_index_location, int base_vertex_location)
+{
+	//TODO:
+}
+
+void graphics_context::draw_instanced(uint32_t vertex_count_per_instance, uint32_t instance_count, uint32_t start_vertex_location, uint32_t start_instance_location)
 {
 	//TODO:
 }
