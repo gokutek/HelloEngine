@@ -60,8 +60,8 @@ int renderer::initialize()
 {
     //初始化Root Signature
     root_signature_.reset(new root_signature(2, 0));//FIXME:
-    root_signature_->get_root_parameter(0).init_as_constant_buffer(0, D3D12_SHADER_VISIBILITY_VERTEX);
-    root_signature_->get_root_parameter(1).init_as_constant_buffer(0, D3D12_SHADER_VISIBILITY_PIXEL);
+    root_signature_->get_root_parameter(0).init_as_buffer_cbv(0, D3D12_SHADER_VISIBILITY_VERTEX);
+    root_signature_->get_root_parameter(1).init_as_buffer_cbv(0, D3D12_SHADER_VISIBILITY_PIXEL);
     root_signature_->finalize(L"RootSig", D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
     DXGI_FORMAT color_format = get_rhi()->buffer_manager_.scene_color_buffer->get_format();
