@@ -1,4 +1,4 @@
-#include "graphics_context.h"
+﻿#include "graphics_context.h"
 
 void graphics_context::clear_uav(gpu_buffer& target)
 {

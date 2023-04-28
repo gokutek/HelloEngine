@@ -1,4 +1,4 @@
-#include "root_signature.h"
+ï»¿#include "root_signature.h"
 #include "graphics_core.h"
 #include "root_parameter.h"
 
@@ -56,7 +56,7 @@ void root_signature::init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DES
 	static_desc.MinLOD = desc.MinLOD;
 	static_desc.MaxLOD = desc.MaxLOD;
 
-	//ÌØÊâ×Ö¶ÎBorderColor£¨ÀàĞÍ²»Ò»ÖÂ£©
+	//ç‰¹æ®Šå­—æ®µBorderColorï¼ˆç±»å‹ä¸ä¸€è‡´ï¼‰
 	if (static_desc.AddressU == D3D12_TEXTURE_ADDRESS_MODE_BORDER
 		|| static_desc.AddressV == D3D12_TEXTURE_ADDRESS_MODE_BORDER
 		|| static_desc.AddressW == D3D12_TEXTURE_ADDRESS_MODE_BORDER)
@@ -79,7 +79,7 @@ void root_signature::init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DES
 		}
 	}
 
-	//ÌØÓĞµÄ×Ö¶Î
+	//ç‰¹æœ‰çš„å­—æ®µ
 	static_desc.ShaderRegister = register_id;
 	static_desc.RegisterSpace = 0;
 	static_desc.ShaderVisibility = visibility;
@@ -133,7 +133,7 @@ void root_signature::finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS fl
 		}
 	}
 
-	//TODO: ÕâÀï¼ò»¯ÁË£¬Ã»ÓĞ¶àÏß³ÌÖ§³Ö
+	//TODO: è¿™é‡Œç®€åŒ–äº†ï¼Œæ²¡æœ‰å¤šçº¿ç¨‹æ”¯æŒ
 
 	auto iter = rhi_root_signatures_map_.find(hash_code);
 	if (iter == rhi_root_signatures_map_.end())

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "command_context.h"
 #include "gpu_buffer.h"
@@ -6,7 +6,7 @@
 #include "depth_buffer.h"
 
 /**
- * @brief ÏòCommand ListÖĞ²åÈë¸÷ÖÖäÖÈ¾ÃüÁî
+ * @brief å‘Command Listä¸­æ’å…¥å„ç§æ¸²æŸ“å‘½ä»¤
  */
 class graphics_context : public command_context
 {
