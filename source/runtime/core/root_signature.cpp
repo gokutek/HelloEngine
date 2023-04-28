@@ -7,7 +7,7 @@ std::unordered_map<size_t, ComPtr<ID3D12RootSignature> > root_signature::rhi_roo
 root_signature::root_signature(uint32_t root_params_num, uint32_t static_samplers_num) :
 	finalized_(false),
 	parameters_num_(0),
-	samplers_num_(0),
+	static_samplers_num_(0),
 	init_static_samplers_num_(0),
 	descriptor_table_bmp_(0),
 	sampler_table_bmp_(0)
@@ -30,10 +30,10 @@ void root_signature::destroy_all()
 void root_signature::reset(uint32_t root_params_num, uint32_t static_samplers_num)
 {
 	parameters_num_ = root_params_num;
-	samplers_num_ = static_samplers_num;
+	static_samplers_num_ = static_samplers_num;
 	init_static_samplers_num_ = 0;
 	param_array_.reset(new root_parameter[root_params_num]);
-	sampler_array_.reset(new D3D12_STATIC_SAMPLER_DESC[static_samplers_num]);
+	static_sampler_array_.reset(new D3D12_STATIC_SAMPLER_DESC[static_samplers_num]);
 }
 
 root_parameter& root_signature::get_root_parameter(size_t index)
@@ -44,8 +44,8 @@ root_parameter& root_signature::get_root_parameter(size_t index)
 
 void root_signature::init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility)
 {
-	ASSERT(init_static_samplers_num_ < samplers_num_);
-	D3D12_STATIC_SAMPLER_DESC& static_desc = sampler_array_[init_static_samplers_num_++];
+	ASSERT(init_static_samplers_num_ < static_samplers_num_);
+	D3D12_STATIC_SAMPLER_DESC& static_desc = static_sampler_array_[init_static_samplers_num_++];
 	static_desc.Filter = desc.Filter;
 	static_desc.AddressU = desc.AddressU;
 	static_desc.AddressV = desc.AddressV;
@@ -89,13 +89,13 @@ void root_signature::finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS fl
 {
 	if (finalized_) { return; }
 
-	ASSERT(samplers_num_ == init_static_samplers_num_);
+	ASSERT(static_samplers_num_ == init_static_samplers_num_);
 
 	D3D12_ROOT_SIGNATURE_DESC root_desc;
 	root_desc.NumParameters = parameters_num_;
 	root_desc.pParameters = (D3D12_ROOT_PARAMETER*)param_array_.get();
-	root_desc.NumStaticSamplers = samplers_num_;
-	root_desc.pStaticSamplers = sampler_array_.get();
+	root_desc.NumStaticSamplers = static_samplers_num_;
+	root_desc.pStaticSamplers = static_sampler_array_.get();
 	root_desc.Flags = flags;
 
 	descriptor_table_bmp_ = 0;

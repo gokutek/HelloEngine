@@ -10,6 +10,12 @@ class root_parameter;
 
 /**
  * @brief root_signature与一个特定的HLSL强关联。
+ * 
+ * root_signature主要含ROOT_PARAMETER和STATIC_SAMPLER两部分。
+ * 
+ * 参考：
+ * 
+ * HLSL中声明RootSignature：https://learn.microsoft.com/en-us/windows/win32/direct3d12/specifying-root-signatures-in-hlsl
  */
 class root_signature
 {
@@ -31,11 +37,6 @@ public:
 	/**
 	 * @brief
 	 */
-	void reset(uint32_t root_params_num, uint32_t static_samplers_num);
-
-	/**
-	 * @brief
-	 */
 	root_parameter& get_root_parameter(size_t index);
 
 	/**
@@ -44,7 +45,7 @@ public:
 	void init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility);
 
 	/**
-	 * @brief
+	 * @brief 序列化并创建ID3D12RootSignature
 	 */
 	void finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS flags);
 
@@ -54,14 +55,22 @@ public:
 	ID3D12RootSignature* get_signature() const;
 
 private:
+	/**
+	 * @brief 重置
+	 * @param root_params_num ROOT_PARAMETER参数数量
+	 * @param static_samplers_num STATIC_SAMPLER参数数量
+	 */
+	void reset(uint32_t root_params_num, uint32_t static_samplers_num);
+
+private:
 	static std::unordered_map<size_t, ComPtr<ID3D12RootSignature> > rhi_root_signatures_map_;
 
-	uint32_t parameters_num_;
+	uint32_t parameters_num_; ///< 数组长度
 	std::unique_ptr<root_parameter[]> param_array_;
 	
-	std::unique_ptr<D3D12_STATIC_SAMPLER_DESC[]> sampler_array_;
-	uint32_t samplers_num_;
-	uint32_t init_static_samplers_num_;
+	uint32_t static_samplers_num_; ///< 数组长度
+	std::unique_ptr<D3D12_STATIC_SAMPLER_DESC[]> static_sampler_array_;
+	uint32_t init_static_samplers_num_; ///< 已用数量
 
 	uint32_t descriptor_table_bmp_;
 	uint32_t sampler_table_bmp_;
