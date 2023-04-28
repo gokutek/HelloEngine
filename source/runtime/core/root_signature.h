@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "pch.h"
 #include "utility.h"
@@ -8,21 +8,49 @@
 
 class root_parameter;
 
-/*
-===============================================================================
-===============================================================================
-*/
+/**
+ * @brief root_signature与一个特定的HLSL强关联。
+ */
 class root_signature
 {
 public:
+	/**
+	 * @brief 构造函数
+	 * @param root_params_num 即HLSL中的寄存器数量
+	 * @param static_samplers_num 即HLSL中的寄存器数量(仅"s0"之类的)
+	 */
 	root_signature(uint32_t root_params_num, uint32_t static_samplers_num);
+
 	~root_signature();
 
+	/**
+	 * @brief
+	 */
 	void destroy_all();
+
+	/**
+	 * @brief
+	 */
 	void reset(uint32_t root_params_num, uint32_t static_samplers_num);
+
+	/**
+	 * @brief
+	 */
 	root_parameter& get_root_parameter(size_t index);
+
+	/**
+	 * @brief
+	 */
 	void init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility);
+
+	/**
+	 * @brief
+	 */
 	void finalize(wchar_t const* name, D3D12_ROOT_SIGNATURE_FLAGS flags);
+
+	/**
+	 * @brief
+	 */
 	ID3D12RootSignature* get_signature() const;
 
 private:
