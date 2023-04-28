@@ -1,2 +1,3 @@
 ADD_SUBDIRECTORY(runtime)
 ADD_SUBDIRECTORY(hello_world)
+ADD_SUBDIRECTORY(test)
