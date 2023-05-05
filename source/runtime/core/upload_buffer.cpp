@@ -43,7 +43,8 @@ int upload_buffer::create(wchar_t const* name, size_t buffer_size)
 void* upload_buffer::map()
 {
 	void* buffer = nullptr;
-	rhi_resource_->Map(0, &CD3DX12_RANGE(0, buffer_size_), &buffer);
+	CD3DX12_RANGE read_range(0, buffer_size_); //CPU要读取整块资源，第2个参数也可传nullptr
+	rhi_resource_->Map(0, &read_range, &buffer); 
 	return buffer;
 }
 

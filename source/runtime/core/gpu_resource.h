@@ -4,43 +4,88 @@
 #include "utility.h"
 #include <stdint.h>
 
-/*
-===============================================================================
-该类本身不会被直接实例化，而是使用它的子类；
-ID3D12Resource也是在不同的子类中创建的；
-===============================================================================
-*/
+/**
+ * @brief 表示一个GPU资源（ID3D12Resource）
+ * 
+ * 该类本身不会被直接使用，而是使用它的子类，由子类中负责创建资源。
+ */
 class gpu_resource
 {
 public:
 	gpu_resource();
+
+	/**
+	 * @brief
+	 */
 	gpu_resource(ID3D12Resource* resource, D3D12_RESOURCE_STATES current_state);
+
 	virtual ~gpu_resource();
 
+	/**
+	 * @brief
+	 */
 	virtual void destroy();
 
+	/**
+	 * @brief
+	 */
 	ID3D12Resource* get_resource();
+
+	/**
+	 * @brief 同上
+	 */
 	const ID3D12Resource* get_resource() const;
+
+	/**
+	 * @brief
+	 */
 	ID3D12Resource* operator->();
+
+	/**
+	 * @brief 同上
+	 */
 	const ID3D12Resource* operator->() const;
 
+	/**
+	 * @brief
+	 */
 	ID3D12Resource** get_address_of();
 	
+	/**
+	 * @brief
+	 */
 	D3D12_GPU_VIRTUAL_ADDRESS get_gpu_virtual_address() const;
 
+	/**
+	 * @brief
+	 */
 	D3D12_RESOURCE_STATES get_usage_state() const;
+
+	/**
+	 * @brief
+	 */
 	void set_usage_state(D3D12_RESOURCE_STATES new_state);
 
+	/**
+	 * @brief
+	 */
 	D3D12_RESOURCE_STATES get_transitioning_state() const;
+
+	/**
+	 * @brief
+	 */
 	void set_transitioning_state(D3D12_RESOURCE_STATES new_state);
 
+	/**
+	 * @brief
+	 */
 	uint32_t get_version_id() const;
 
 protected:
 	ComPtr<ID3D12Resource> rhi_resource_;
 	D3D12_RESOURCE_STATES usage_state_;
 	D3D12_RESOURCE_STATES transitioning_state_;
-	D3D12_GPU_VIRTUAL_ADDRESS gpu_virtual_address_;
+	D3D12_GPU_VIRTUAL_ADDRESS gpu_virtual_address_; //TODO:这个为什么要放基类里
 	uint32_t version_id_;
 };
 

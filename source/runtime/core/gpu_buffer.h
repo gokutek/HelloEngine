@@ -5,30 +5,81 @@
 
 class upload_buffer;
 
-/*
-===============================================================================
-抽象类；
-===============================================================================
-*/
+/**
+ * @brief 本类是一个抽象类
+ */
 class gpu_buffer : public gpu_resource
 {
 public:
     gpu_buffer();
 
-    // Create a buffer.  If initial data is provided, it will be copied into the buffer using the default command context.
+    /**
+     * @brief 创建Buffer
+     * @param name
+     * @param num_elements 元素个数
+     * @param element_size 每个元素的大小
+     * @param initial_data 初始化数据，若非空，则将拷贝过去 If initial data is provided, it will be copied into the buffer using the default command context.
+     */
     int create(wchar_t const* name, uint32_t num_elements, uint32_t element_size, const void* initial_data = nullptr);
+
+    /**
+     * @brief 创建Buffer
+     * @param name
+     * @param num_elements
+     * @param element_size
+     * @param src_data
+     * @param src_offset
+     */
     int create(wchar_t const* name, uint32_t num_elements, uint32_t element_size, const upload_buffer& src_data, uint32_t src_offset = 0);
 
-    // Sub-Allocate a buffer out of a pre-allocated heap.  If initial data is provided, it will be copied into the buffer using the default command context.
+    /**
+     * @brief Sub-Allocate a buffer out of a pre-allocated heap. If initial data is provided, it will be copied into the buffer using the default command context.
+     */
     int create(wchar_t const* name, ID3D12Heap* backing_heap, uint32_t heap_offset, uint32_t num_elements, uint32_t element_size, const void* initial_data = nullptr);
 
     D3D12_CPU_DESCRIPTOR_HANDLE get_uav() const;
     D3D12_CPU_DESCRIPTOR_HANDLE get_srv() const;
+
+    /**
+     * @brief
+     */
+    D3D12_GPU_VIRTUAL_ADDRESS root_constant_buffer_view(void) const;
+
+    /**
+     * @brief
+     */
+    D3D12_CPU_DESCRIPTOR_HANDLE create_constant_buffer_view(uint32_t offset, uint32_t size) const;
+
+    /**
+     * @brief
+     */
+    D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view(size_t offset, uint32_t size, uint32_t stride) const;
+
+    /**
+     * @brief
+     */
+    D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view(size_t base_vertex_index = 0) const;
+
+    /**
+     * @brief
+     */
+    D3D12_INDEX_BUFFER_VIEW index_buffer_view(size_t offset, uint32_t size, bool b32bit = false) const;
+
+    /**
+     * @brief
+     */
+    D3D12_INDEX_BUFFER_VIEW index_buffer_view(size_t start_index = 0) const;
+
+    size_t get_buffer_size() const;
+    uint32_t get_element_count() const;
+    uint32_t get_element_size() const;
                                    
 protected:
     D3D12_RESOURCE_DESC describe_buffer() const;
 
-    /** 子类需实现该接口来创建Buffer对应的View */
+    /** 
+     * @brief 创建资源相关的View，由子类实现 
+     */
     virtual void create_derived_views() = 0;
 
 private:
