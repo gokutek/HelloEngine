@@ -3,29 +3,58 @@
 #include "core/utility.h"
 #include "core/graphics_core.h"
 #include "core/byte_address_buffer.h"
+#include "core/upload_buffer.h"
 #include "cso/hello_world_vs.h"
 #include "cso/hello_world_ps.h"
 #include <string>
 #include <memory>
 
-struct mesh_vertex
+namespace test
 {
-	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 color;
-};
+	struct mesh_vertex
+	{
+		DirectX::XMFLOAT3 pos;
+		DirectX::XMFLOAT3 color;
+	};
 
-class static_mesh
-{
-public:
-	void render();
+	__declspec(align(256)) struct MeshConstants
+	{
+		DirectX::XMMATRIX World;         // Object to world
+		DirectX::XMMATRIX WorldIT;       // Object normal to world normal
+	};
 
-	byte_address_buffer* vertex_buffer;
-};
+	/**
+	 * @brief 参考Model和ModelInstance
+	 */
+	class model
+	{
+	public:
+		void render();
 
-static std::shared_ptr<static_mesh> load_static_mesh()
-{
-	std::shared_ptr<static_mesh> mesh(new static_mesh());
-	return mesh;
+		uint32_t m_NumNodes;
+	};
+
+	/**
+	 * @brief 参考Model和ModelInstance
+	 */
+	class model_instance
+	{
+	public:
+		model_instance(std::shared_ptr<const model> sourceModel)
+		{
+			m_MeshConstantsCPU.create(L"Mesh Constant Upload Buffer", sourceModel->m_NumNodes * sizeof(MeshConstants));
+			m_MeshConstantsGPU.create(L"Mesh Constant GPU Buffer", sourceModel->m_NumNodes, sizeof(MeshConstants));
+		}
+
+		upload_buffer m_MeshConstantsCPU;
+		byte_address_buffer m_MeshConstantsGPU;
+	};
+
+	static std::shared_ptr<model> load_static_mesh()
+	{
+		std::shared_ptr<model> mesh(new model());
+		return mesh;
+	}
 }
 
 void hello_world_app::startup()
