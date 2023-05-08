@@ -47,6 +47,9 @@ public:
 	 */
 	root_signature(uint32_t root_params_num, uint32_t static_samplers_num);
 
+	/**
+	 * @brief 
+	 */
 	~root_signature();
 
 	/**
@@ -57,11 +60,15 @@ public:
 	/**
 	 * @brief 获得指定索引的root_parameter，用于对它初始化
 	 * @param index 索引
+	 * @return 
 	 */
 	root_parameter& get_root_parameter(size_t index);
 
 	/**
-	 * @brief
+	 * @brief 初始化D3D12_STATIC_SAMPLER_DESC
+	 * @param register_id 
+	 * @param desc 
+	 * @param visibility 
 	 */
 	void init_static_sampler(uint32_t register_id, D3D12_SAMPLER_DESC const& desc, D3D12_SHADER_VISIBILITY visibility);
 
@@ -74,6 +81,16 @@ public:
 	 * @brief 获取最终创建的RootSignature
 	 */
 	ID3D12RootSignature* get_signature() const;
+
+	uint32_t get_parameters_num() const;
+	uint32_t get_descriptor_table_bmp() const;
+	uint32_t get_sampler_table_bmp() const;
+
+	/**
+	 * @brief 
+	 * @return 数组的const引用
+	 */
+	uint32_t const(&get_descriptor_table_size() const)[16];
 
 private:
 	/**
@@ -104,4 +121,24 @@ private:
 inline ID3D12RootSignature* root_signature::get_signature() const
 { 
 	return rhi_root_signature_.Get(); 
+}
+
+inline uint32_t root_signature::get_parameters_num() const
+{
+	return parameters_num_;
+}
+
+inline uint32_t root_signature::get_descriptor_table_bmp() const
+{
+	return descriptor_table_bmp_;
+}
+
+inline uint32_t root_signature::get_sampler_table_bmp() const
+{
+	return sampler_table_bmp_;
+}
+
+inline uint32_t const(&root_signature::get_descriptor_table_size() const)[16]
+{
+	return descriptor_table_size_;
 }

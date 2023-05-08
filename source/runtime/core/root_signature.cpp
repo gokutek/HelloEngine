@@ -19,7 +19,6 @@ root_signature::root_signature(uint32_t root_params_num, uint32_t static_sampler
 
 root_signature::~root_signature()
 {
-	//TODO:
 }
 
 void root_signature::destroy_all()
@@ -30,9 +29,10 @@ void root_signature::destroy_all()
 void root_signature::reset(uint32_t root_params_num, uint32_t static_samplers_num)
 {
 	parameters_num_ = root_params_num;
+	param_array_.reset(new root_parameter[root_params_num]);
+
 	static_samplers_num_ = static_samplers_num;
 	init_static_samplers_num_ = 0;
-	param_array_.reset(new root_parameter[root_params_num]);
 	static_sampler_array_.reset(new D3D12_STATIC_SAMPLER_DESC[static_samplers_num]);
 }
 
