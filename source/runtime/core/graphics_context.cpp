@@ -66,10 +66,15 @@ void graphics_context::draw(uint32_t vertex_count, uint32_t vertex_start_offset)
 
 void graphics_context::draw_indexed(uint32_t index_count, uint32_t start_index_location, int base_vertex_location)
 {
-	//TODO:
+	draw_indexed_instanced(index_count, 1, start_index_location, base_vertex_location, 0);
 }
 
 void graphics_context::draw_instanced(uint32_t vertex_count_per_instance, uint32_t instance_count, uint32_t start_vertex_location, uint32_t start_instance_location)
+{
+	//TODO:
+}
+
+void graphics_context::draw_indexed_instanced(uint32_t index_count_per_instance, uint32_t instance_count, uint32_t start_index_location, uint32_t base_vertex_location, uint32_t start_instance_location)
 {
 	//TODO:
 }

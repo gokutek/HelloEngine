@@ -3,6 +3,7 @@
 #include "pch.h"
 #include "gpu_resource.h"
 #include "gpu_buffer.h"
+#include "dynamic_descriptor_heap.h"
 #include <stdint.h>
 #include <string>
 
