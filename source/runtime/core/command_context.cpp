@@ -19,9 +19,14 @@ command_context::command_context(D3D12_COMMAND_LIST_TYPE type)
 	rhi_cur_graphics_root_signature_(nullptr),
 	rhi_cur_compute_root_signature_(nullptr),
 	rhi_cur_pipeline_state_(nullptr),
-	num_barriers_to_flush_(0)
+	dynamic_view_descriptor_heap_(this, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV),
+	dynamic_sampler_descriptor_heap_(this, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER),
+	num_barriers_to_flush_(0),
+	cpu_linear_allocator_(linear_allocator_type::CpuWritable),
+	gpu_linear_allocator_(linear_allocator_type::GpuExclusive)
 {
 	ZeroMemory(resource_barrier_buffers_, sizeof(resource_barrier_buffers_));
+	ZeroMemory(current_descriptor_heaps_, sizeof(current_descriptor_heaps_));
 }
 
 command_context::~command_context()
@@ -30,9 +35,37 @@ command_context::~command_context()
 
 uint64_t command_context::flush(bool wait_for_completion)
 {
-	//TODO:
-	assert(false);
-	return 0;
+	flush_resource_barriers();
+
+	ASSERT(rhi_current_allocator_ != nullptr);
+
+	uint64_t fence_value = get_rhi()->command_manager_.get_queue(type_).execute_command_list(rhi_command_list_);
+
+	if (wait_for_completion)
+	{
+		get_rhi()->command_manager_.wait_for_fence(fence_value);
+	}
+
+	rhi_command_list_->Reset(rhi_current_allocator_, nullptr);
+
+	if (rhi_cur_graphics_root_signature_)
+	{
+		rhi_command_list_->SetGraphicsRootSignature(rhi_cur_graphics_root_signature_);
+	}
+	
+	if (rhi_cur_compute_root_signature_)
+	{
+		rhi_command_list_->SetComputeRootSignature(rhi_cur_compute_root_signature_);
+	}
+
+	if (rhi_cur_pipeline_state_)
+	{
+		rhi_command_list_->SetPipelineState(rhi_cur_pipeline_state_);
+	}
+
+	bind_descriptor_heaps();
+
+	return fence_value;
 }
 
 uint64_t command_context::finish(bool wait_for_completion)
@@ -45,23 +78,23 @@ uint64_t command_context::finish(bool wait_for_completion)
 
     command_queue& cmd_queue = get_rhi()->command_manager_.get_queue(type_);
 
-    uint64_t FenceValue = cmd_queue.execute_command_list(rhi_command_list_);
-    cmd_queue.discard_allocator(FenceValue, rhi_current_allocator_);
+    uint64_t fence_value = cmd_queue.execute_command_list(rhi_command_list_);
+    cmd_queue.discard_allocator(fence_value, rhi_current_allocator_);
     rhi_current_allocator_ = nullptr;
 
-    //m_CpuLinearAllocator.CleanupUsedPages(FenceValue);
-    //m_GpuLinearAllocator.CleanupUsedPages(FenceValue);
-    //m_DynamicViewDescriptorHeap.CleanupUsedHeaps(FenceValue);
-    //m_DynamicSamplerDescriptorHeap.CleanupUsedHeaps(FenceValue);
+	cpu_linear_allocator_.cleanup_used_pages(fence_value);
+	gpu_linear_allocator_.cleanup_used_pages(fence_value);
+	dynamic_view_descriptor_heap_.cleanup_used_heaps(fence_value);
+	dynamic_sampler_descriptor_heap_.cleanup_used_heaps(fence_value);
 
     if (wait_for_completion)
     {
-        get_rhi()->command_manager_.wait_for_fence(FenceValue);
+        get_rhi()->command_manager_.wait_for_fence(fence_value);
     }
 
     get_rhi()->context_manager_.free_context(this);
 
-    return FenceValue;
+    return fence_value;
 }
 
 void command_context::initialize()
@@ -144,17 +177,18 @@ void command_context::flush_resource_barriers()
 
 void command_context::bind_descriptor_heaps()
 {
-#if 0
-	UINT NonNullHeaps = 0;
-	ID3D12DescriptorHeap* HeapsToBind[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
-	for (UINT i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i)
+	ID3D12DescriptorHeap* heaps[D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES];
+	UINT count = 0;
+	for (int i = 0; i < D3D12_DESCRIPTOR_HEAP_TYPE_NUM_TYPES; ++i)
 	{
-		ID3D12DescriptorHeap* HeapIter = m_CurrentDescriptorHeaps[i];
-		if (HeapIter != nullptr)
-			HeapsToBind[NonNullHeaps++] = HeapIter;
+		if (current_descriptor_heaps_[i])
+		{
+			heaps[count++] = current_descriptor_heaps_[i];
+		}
 	}
 
-	if (NonNullHeaps > 0)
-		m_CommandList->SetDescriptorHeaps(NonNullHeaps, HeapsToBind);
-#endif
+	if (count > 0)
+	{
+		rhi_command_list_->SetDescriptorHeaps(count, heaps);
+	}
 }

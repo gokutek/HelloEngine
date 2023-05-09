@@ -29,7 +29,7 @@ public:
 	/**
 	 * @brief 
 	 */
-	void cleanup_used_heaps();
+	void cleanup_used_heaps(uint64_t fence_value);
 
 	/**
 	 * @brief Copy multiple handles into the cache area reserved for the specified root parameter.

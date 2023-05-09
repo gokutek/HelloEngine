@@ -17,7 +17,7 @@ dynamic_descriptor_heap::~dynamic_descriptor_heap()
 {
 }
 
-void dynamic_descriptor_heap::cleanup_used_heaps()
+void dynamic_descriptor_heap::cleanup_used_heaps(uint64_t fence_value)
 {
 	//TODO:
 }
