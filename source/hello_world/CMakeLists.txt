@@ -5,10 +5,10 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 set(TARGET hello_world)
 
+file(GLOB CPP_SRC_FILES "*.h" "*.cpp")
+
 set(TARGET_SRC
-    hello_world.h
-    hello_world.cpp
-    main.cpp
+    ${CPP_SRC_FILES}
     hello_world_vs.hlsl
     hello_world_ps.hlsl
     )
