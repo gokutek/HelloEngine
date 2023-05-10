@@ -29,5 +29,5 @@ set_hlsl_file_prop(hello_world_vs Vertex)
 set_hlsl_file_prop(hello_world_ps Pixel)
 
 add_executable(${TARGET} WIN32 ${TARGET_SRC})
-target_link_libraries(${TARGET} lib_core)
+target_link_libraries(${TARGET} lib_core lib_model)
 target_link_libraries(${TARGET} dxgi d3d12 dxguid dinput8 xinput9_1_0)

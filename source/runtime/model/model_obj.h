@@ -36,14 +36,14 @@ public:
      * @param nth_vert 
      * @return 
     */
-    vector3 normal(int face, int nth_vert) const;
+    vector3 normal(size_t face, size_t nth_vert) const;
 
     /**
      * @brief 获取顶点
      * @param i 
      * @return 
     */
-    vector3 vert(int i) const;
+    vector3 vert(size_t i) const;
 
     /**
      * @brief 获取第i个面的第j个顶点的坐标
@@ -51,7 +51,7 @@ public:
      * @param nth_vert 
      * @return 
     */
-    vector3 vert(int face, int nth_vert) const;
+    vector3 vert(size_t face, size_t nth_vert) const;
 
     /**
      * @brief 获取第i个面的第j个顶点的UV
@@ -59,7 +59,7 @@ public:
      * @param nth_vert 
      * @return 
     */
-    vector2 uv(int face, int nth_vert) const;
+    vector2 uv(size_t face, size_t nth_vert) const;
 
 private:
     std::vector<vector3> verts; ///< 顶点

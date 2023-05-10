@@ -8,7 +8,10 @@ model_obj::model_obj(std::string const& filename)
 {
     std::ifstream in;
     in.open(filename, std::ifstream::in);
-    if (in.fail()) return;
+    if (in.fail())
+    {
+        return;
+    }
 
     while (!in.eof()) 
     {
@@ -71,22 +74,22 @@ size_t model_obj::nfaces() const
     return facet_vrt.size() / 3;
 }
 
-vector3 model_obj::vert(int i) const 
+vector3 model_obj::vert(size_t i) const 
 {
     return verts[i];
 }
 
-vector3 model_obj::vert(int face, int nth_vert) const 
+vector3 model_obj::vert(size_t face, size_t nth_vert) const
 {
     return verts[facet_vrt[face * 3 + nth_vert]];
 }
 
-vector2 model_obj::uv(int face, int nth_vert) const 
+vector2 model_obj::uv(size_t face, size_t nth_vert) const
 {
     return tex_coord[facet_tex[face * 3 + nth_vert]];
 }
 
-vector3 model_obj::normal(int face, int nth_vert) const 
+vector3 model_obj::normal(size_t face, size_t nth_vert) const
 {
     return norms[facet_nrm[face * 3 + nth_vert]];
 }

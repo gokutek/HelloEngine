@@ -1,4 +1,4 @@
-#include "hello_world.h"
+ï»¿#include "hello_world.h"
 #include "core/utility.h"
 #include <windows.h>
 
@@ -11,11 +11,11 @@ static bool start_unit_test()
 	_BitScanReverse(&HighBit, 0xff);
 	ASSERT(HighBit == 7);
 
-	//new³¤¶ÈÎª0µÄÊı×é£¬²»»á±ÀÀ£¡£
+	//newé•¿åº¦ä¸º0çš„æ•°ç»„ï¼Œä¸ä¼šå´©æºƒã€‚
 	auto* p = new std::string[0];
 	delete[] p;
 
-	//32Î»Óë64Î»½øĞĞÒì»ò
+	//32ä½ä¸64ä½è¿›è¡Œå¼‚æˆ–
 	uint32_t v1 = 0;
 	uint64_t v2 = -1;
 	uint64_t x = v1 ^ v2;
@@ -28,6 +28,12 @@ static bool start_unit_test()
 
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE /*hPrevInstance*/, _In_ LPWSTR /*lpCmdLine*/, _In_ int nCmdShow)
 {
+	//è®¾ç½®å½“å‰å·¥ä½œç›®å½•
+	TCHAR path[MAX_PATH];
+	GetModuleFileName(NULL, path, MAX_PATH);
+	*wcsrchr(path, '\\') = 0;
+	SetCurrentDirectory(path);
+
 	start_unit_test();
 
 	return run_application(hello_world_app(), TEXT("hello_world"), hInstance, nCmdShow);

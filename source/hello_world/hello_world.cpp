@@ -6,60 +6,39 @@
 #include "core/upload_buffer.h"
 #include "cso/hello_world_vs.h"
 #include "cso/hello_world_ps.h"
+#include "model/model_obj.h"
 #include <string>
 #include <memory>
 
-namespace test
+struct vertex_attr
 {
-	struct mesh_vertex
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT3 color;
-	};
-
-	__declspec(align(256)) struct MeshConstants
-	{
-		DirectX::XMMATRIX World;         // Object to world
-		DirectX::XMMATRIX WorldIT;       // Object normal to world normal
-	};
-
-	/**
-	 * @brief 参考Model和ModelInstance
-	 */
-	class model
-	{
-	public:
-		void render();
-
-		uint32_t m_NumNodes;
-	};
-
-	/**
-	 * @brief 参考Model和ModelInstance
-	 */
-	class model_instance
-	{
-	public:
-		model_instance(std::shared_ptr<const model> sourceModel)
-		{
-			m_MeshConstantsCPU.create(L"Mesh Constant Upload Buffer", sourceModel->m_NumNodes * sizeof(MeshConstants));
-			m_MeshConstantsGPU.create(L"Mesh Constant GPU Buffer", sourceModel->m_NumNodes, sizeof(MeshConstants));
-		}
-
-		upload_buffer m_MeshConstantsCPU;
-		byte_address_buffer m_MeshConstantsGPU;
-	};
-
-	static std::shared_ptr<model> load_static_mesh()
-	{
-		std::shared_ptr<model> mesh(new model());
-		return mesh;
-	}
-}
+	DirectX::XMFLOAT3 pos;
+};
 
 void hello_world_app::startup()
 {
-	//TODO:定义三角形
+	model_obj model("../asset/african_head/african_head.obj");
+	std::vector<vertex_attr> vertex_data;
+	for (size_t i = 0; i < model.nfaces(); ++i)
+	{
+		for (size_t j = 0; j < 3; ++j)
+		{
+			vertex_attr attr;
+			DirectX::XMStoreFloat3(&attr.pos, model.vert(i, j));
+			vertex_data.push_back(attr);
+		}
+	}
+
+	size_t byte_size = vertex_data.size() * sizeof(vertex_attr);
+
+	upload_buffer geo_buffer;
+	geo_buffer.create(L"Geometry Upload Buffer", byte_size);
+	void* uploadMem = geo_buffer.map();
+	memcpy(uploadMem, &vertex_data[0], byte_size);
+	geo_buffer.unmap(0);
+
+	m_GeometryBuffer.create(L"Geometry Buffer", byte_size, 1, geo_buffer);
+	m_VertexBuffer = m_GeometryBuffer.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
 }
 
 void hello_world_app::cleanup()
