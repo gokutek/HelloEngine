@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "pch.h"
 #include <assert.h>
@@ -54,7 +54,7 @@ namespace utility
 		Print(buffer);
 	}
 
-	/** ¼ÆËãÊý×éµÄ¹þÏ£ */
+	/** è®¡ç®—æ•°ç»„çš„å“ˆå¸Œ */
 	template<typename T>
 	inline size_t hash_array(T const* array, size_t count, size_t hash = 2166136261U)
 	{
