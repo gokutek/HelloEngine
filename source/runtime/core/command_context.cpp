@@ -4,14 +4,6 @@
 #include "utility.h"
 #include "math/common.h"
 
-//command_context& command_context::begin(wchar_t const* id)
-//{
-//	command_context* new_context = get_rhi()->context_manager_.allocate_context(D3D12_COMMAND_LIST_TYPE_DIRECT);
-//	new_context->set_id(id);
-//	//TODO: profiling
-//	return *new_context;
-//}
-
 command_context::command_context(D3D12_COMMAND_LIST_TYPE type) 
 	: type_(type),
 	owning_manager_(nullptr),
@@ -150,17 +142,17 @@ void command_context::copy_buffer_region(gpu_resource& dest, size_t dest_offset,
 
 void command_context::copy_sub_resource(gpu_resource& dest, UINT dest_sub_index, gpu_resource& src, UINT src_sub_index)
 {
-	//TODO:
+	assert(false && "unimpl yet!");
 }
 
 void command_context::copy_texture_region(gpu_resource& dest, UINT x, UINT y, UINT z, gpu_resource& source, RECT& rect)
 {
-	//TODO:
+	assert(false && "unimpl yet!");
 }
 
 void command_context::initialize_texture(gpu_resource& dest, UINT num_sub_resources, D3D12_SUBRESOURCE_DATA subdata[])
 {
-	//TODO:
+	assert(false && "unimpl yet!");
 }
 
 void command_context::initialize_buffer(gpu_buffer& dest, const void* data, size_t num_bytes, size_t dest_offset)
@@ -189,12 +181,12 @@ void command_context::initialize_buffer(gpu_buffer& dest, const upload_buffer& s
 
 void command_context::initialize_texture_array_slice(gpu_resource& dest, UINT slice_index, gpu_resource& src)
 {
-	//TODO:
+	assert(false && "unimpl yet!");
 }
 
 void command_context::write_buffer(gpu_resource& dest, size_t dest_offset, const void* data, size_t num_bytes)
 {
-	//TODO:
+	assert(false && "unimpl yet!");
 }
 
 void command_context::transition_resource(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate)
@@ -202,7 +194,7 @@ void command_context::transition_resource(gpu_resource& resource, D3D12_RESOURCE
 	D3D12_RESOURCE_STATES old_state = resource.get_usage_state();
 	if (type_ == D3D12_COMMAND_LIST_TYPE_COMPUTE)
 	{
-		//TODO:
+		assert(false && "unimpl yet!");
 	}
 
 	if (new_state != old_state)
@@ -229,14 +221,28 @@ void command_context::transition_resource(gpu_resource& resource, D3D12_RESOURCE
 	}
 	else if (new_state == D3D12_RESOURCE_STATE_UNORDERED_ACCESS)
 	{
-		//TODO:
-		assert(false);
+		assert(false && "unimpl yet!");
 	}
 
 	if (flush_immediate || num_barriers_to_flush_ == _countof(resource_barrier_buffers_))
 	{
 		flush_resource_barriers();
 	}
+}
+
+void command_context::begin_resource_transition(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::insert_uav_barrier(gpu_resource& resource, bool flush_immediate)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::insert_alias_barrier(gpu_resource& before, gpu_resource& after, bool flush_immediate)
+{
+	assert(false && "unimpl yet!");
 }
 
 void command_context::flush_resource_barriers()
@@ -246,6 +252,51 @@ void command_context::flush_resource_barriers()
 		rhi_command_list_->ResourceBarrier(num_barriers_to_flush_, resource_barrier_buffers_);
 		num_barriers_to_flush_ = 0;
 	}
+}
+
+void command_context::insert_timestamp(ID3D12QueryHeap* query_heap, uint32_t query_index)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::resolve_timestamps(ID3D12Resource* readback_heap, ID3D12QueryHeap* query_heap, uint32_t num_queries)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::pix_begin_event(wchar_t const* label)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::pix_end_event()
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::pix_set_marker(wchar_t const* label)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::set_descriptor_heap(D3D12_DESCRIPTOR_HEAP_TYPE heap_type, ID3D12DescriptorHeap* heap)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::set_descriptor_heaps(UINT heap_count, D3D12_DESCRIPTOR_HEAP_TYPE heap_types[], ID3D12DescriptorHeap* heaps[])
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::set_pipeline_state(pso const& pso)
+{
+	assert(false && "unimpl yet!");
+}
+
+void command_context::set_predication(ID3D12Resource* Buffer, UINT64 BufferOffset, D3D12_PREDICATION_OP Op)
+{
+	assert(false && "unimpl yet!");
 }
 
 void command_context::bind_descriptor_heaps()

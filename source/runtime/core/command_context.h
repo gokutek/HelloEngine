@@ -6,6 +6,7 @@
 #include "dynamic_descriptor_heap.h"
 #include "linear_allocator.h"
 #include "upload_buffer.h"
+#include "pso.h"
 #include <stdint.h>
 #include <string>
 
@@ -171,10 +172,26 @@ public:
 	 */
 	void transition_resource(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate);
 
+	void begin_resource_transition(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate = false);
+	void insert_uav_barrier(gpu_resource& resource, bool flush_immediate = false);
+	void insert_alias_barrier(gpu_resource& before, gpu_resource& after, bool flush_immediate = false);
+
 	/**
 	 * @brief 将资源屏障提交到命令列表
 	 */
 	void flush_resource_barriers();
+
+	void insert_timestamp(ID3D12QueryHeap* query_heap, uint32_t query_index);
+	void resolve_timestamps(ID3D12Resource* readback_heap, ID3D12QueryHeap* query_heap, uint32_t num_queries);
+	void pix_begin_event(wchar_t const* label);
+	void pix_end_event();
+	void pix_set_marker(wchar_t const* label);
+
+	void set_descriptor_heap(D3D12_DESCRIPTOR_HEAP_TYPE heap_type, ID3D12DescriptorHeap* heap);
+	void set_descriptor_heaps(UINT heap_count, D3D12_DESCRIPTOR_HEAP_TYPE heap_types[], ID3D12DescriptorHeap* heaps[]);
+	void set_pipeline_state(pso const& pso);
+
+	void set_predication(ID3D12Resource* Buffer, UINT64 BufferOffset, D3D12_PREDICATION_OP Op);
 
 	/**
 	 * @brief 
