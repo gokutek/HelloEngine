@@ -2,6 +2,7 @@
 #include "command_context_manager.h"
 #include "graphics_core.h"
 #include "utility.h"
+#include "math/common.h"
 
 //command_context& command_context::begin(wchar_t const* id)
 //{
@@ -118,10 +119,82 @@ void command_context::reset()
 	bind_descriptor_heaps();
 }
 
+void command_context::copy_buffer(gpu_resource& dst, gpu_resource& src)
+{
+	transition_resource(dst, D3D12_RESOURCE_STATE_COPY_DEST, false);
+	transition_resource(src, D3D12_RESOURCE_STATE_COPY_SOURCE, false);
+	flush_resource_barriers();
+	rhi_command_list_->CopyResource(dst.get_resource(), src.get_resource());
+
+	/*
+	===========================================================================
+	关于CopyResource接口的说明：
+	https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12graphicscommandlist-copyresource
+	Must be different resources.
+	Must be the same type.
+	Must be the same total size (bytes).
+	Must have identical dimensions (width, height, depth) or be a compatible Reinterpret Copy.
+	Must have compatible DXGI formats, which means the formats must be identical or at least from the same type group.
+	Can't be currently mapped.
+	===========================================================================
+	*/
+}
+
+void command_context::copy_buffer_region(gpu_resource& dest, size_t dest_offset, gpu_resource& src, size_t src_offset, size_t num_bytes)
+{
+	transition_resource(dest, D3D12_RESOURCE_STATE_COPY_DEST, false);
+	transition_resource(src, D3D12_RESOURCE_STATE_COPY_SOURCE, false);
+	flush_resource_barriers();
+	rhi_command_list_->CopyBufferRegion(dest.get_resource(), dest_offset, src.get_resource(), src_offset, num_bytes);
+}
+
+void command_context::copy_sub_resource(gpu_resource& dest, UINT dest_sub_index, gpu_resource& src, UINT src_sub_index)
+{
+	//TODO:
+}
+
+void command_context::copy_texture_region(gpu_resource& dest, UINT x, UINT y, UINT z, gpu_resource& source, RECT& rect)
+{
+	//TODO:
+}
+
+void command_context::initialize_texture(gpu_resource& dest, UINT num_sub_resources, D3D12_SUBRESOURCE_DATA subdata[])
+{
+	//TODO:
+}
+
 void command_context::initialize_buffer(gpu_buffer& dest, const void* data, size_t num_bytes, size_t dest_offset)
 {
-	//需要将CPU的内存先Upload到GPU，再进行一次GPU上的拷贝
-	assert(false && "not impl yet");
+	// 先分配一个临时GPU Upload Buffer，将CPU数据拷贝过去
+	dyn_alloc mem = reserve_upload_memory(num_bytes);
+	memcpy(mem.data, data, num_bytes);
+
+	// 再进行一次GPU到GPU的内存拷贝
+	transition_resource(dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
+	rhi_command_list_->CopyBufferRegion(dest.get_resource(), dest_offset, mem.buffer.get_resource(), 0, num_bytes);
+	transition_resource(dest, D3D12_RESOURCE_STATE_GENERIC_READ, true);
+}
+
+void command_context::initialize_buffer(gpu_buffer& dest, const upload_buffer& src, size_t src_offset, size_t num_bytes, size_t dest_offset)
+{
+	// 计算目标可写的字节数，防止溢出
+	size_t max_bytes = std::min<size_t>(dest.get_buffer_size() - dest_offset, src.get_buffer_size() - src_offset);
+	num_bytes = std::min<size_t>(max_bytes, num_bytes);
+
+	// 设置目标的barrier、拷贝数据、再恢复目标的barrier
+	transition_resource(dest, D3D12_RESOURCE_STATE_COPY_DEST, true);
+	rhi_command_list_->CopyBufferRegion(dest.get_resource(), dest_offset, (ID3D12Resource*)src.get_resource(), src_offset, num_bytes);
+	transition_resource(dest, D3D12_RESOURCE_STATE_GENERIC_READ, true);
+}
+
+void command_context::initialize_texture_array_slice(gpu_resource& dest, UINT slice_index, gpu_resource& src)
+{
+	//TODO:
+}
+
+void command_context::write_buffer(gpu_resource& dest, size_t dest_offset, const void* data, size_t num_bytes)
+{
+	//TODO:
 }
 
 void command_context::transition_resource(gpu_resource& resource, D3D12_RESOURCE_STATES new_state, bool flush_immediate)
