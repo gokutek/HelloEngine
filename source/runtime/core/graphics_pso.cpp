@@ -28,9 +28,9 @@ void graphics_pso::set_rasterizer_state(D3D12_RASTERIZER_DESC const& rasterizer_
 	state_desc_.RasterizerState = rasterizer_desc;
 }
 
-void graphics_pso::set_depthstencil_state(D3D12_DEPTH_STENCIL_DESC const& depthstencil_desc)
+void graphics_pso::set_depth_stencil_state(D3D12_DEPTH_STENCIL_DESC const& depth_stencil_desc)
 {
-	state_desc_.DepthStencilState = depthstencil_desc;
+	state_desc_.DepthStencilState = depth_stencil_desc;
 }
 
 void graphics_pso::set_sample_mask(UINT sample_mask)
