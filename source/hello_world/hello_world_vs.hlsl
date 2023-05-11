@@ -1,7 +1,6 @@
 struct VSInput
 {
-    float4 position : POSITION;
-    float4 color : COLOR;
+    float3 position : POSITION;
 };
 
 struct VSOutput
@@ -13,7 +12,7 @@ struct VSOutput
 VSOutput main(VSInput vin)
 {
     VSOutput vout;
-    vout.position = vin.position;
-    vout.color = vin.color;
+    vout.position = float4(vin.position, 1.0f);
+    vout.color = float4(1, 1, 1, 1);
     return vout;
 }

@@ -1,5 +1,5 @@
 ﻿#include "renderer.h"
-#include "core/pipeline_state.h"
+#include "core/graphics_pso.h"
 #include "core/root_signature.h"
 #include "core/root_parameter.h"
 #include "core/graphics_core.h"
@@ -72,7 +72,7 @@ int renderer::initialize()
     default_pso_->set_root_signature(root_signature_.get());
     default_pso_->set_rasterizer_state(rasterizer_default_);
     default_pso_->set_blend_state(blend_disable_);
-    default_pso_->set_depthstencil_state(depth_state_read_write_);
+    default_pso_->set_depth_stencil_state(depth_state_read_write_);
     default_pso_->set_input_layout(0, nullptr);
     default_pso_->set_primitive_topology_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
     default_pso_->set_render_target_formats(1, &color_format, depth_format);

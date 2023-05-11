@@ -281,17 +281,43 @@ void command_context::pix_set_marker(wchar_t const* label)
 
 void command_context::set_descriptor_heap(D3D12_DESCRIPTOR_HEAP_TYPE heap_type, ID3D12DescriptorHeap* heap)
 {
-	assert(false && "unimpl yet!");
+	if (current_descriptor_heaps_[heap_type] != heap)
+	{
+		current_descriptor_heaps_[heap_type] = heap;
+		bind_descriptor_heaps();
+	}
 }
 
 void command_context::set_descriptor_heaps(UINT heap_count, D3D12_DESCRIPTOR_HEAP_TYPE heap_types[], ID3D12DescriptorHeap* heaps[])
 {
-	assert(false && "unimpl yet!");
+	bool update = false;
+
+	for (uint32_t i = 0; i < heap_count; ++i)
+	{
+		D3D12_DESCRIPTOR_HEAP_TYPE heap_type = heap_types[i];
+		ID3D12DescriptorHeap* heap = heaps[i];
+
+		if (current_descriptor_heaps_[heap_type] != heap)
+		{
+			current_descriptor_heaps_[heap_type] = heap;
+			update = true;
+		}
+	}
+
+	if (update)
+	{
+		bind_descriptor_heaps();
+	}
 }
 
 void command_context::set_pipeline_state(pso const& pso)
 {
-	assert(false && "unimpl yet!");
+	ID3D12PipelineState* new_pso = pso.get_pipeline_state_object();
+	if (rhi_cur_pipeline_state_ != new_pso)
+	{
+		rhi_cur_pipeline_state_ = new_pso;
+		rhi_command_list_->SetPipelineState(rhi_cur_pipeline_state_);
+	}
 }
 
 void command_context::set_predication(ID3D12Resource* Buffer, UINT64 BufferOffset, D3D12_PREDICATION_OP Op)

@@ -17,32 +17,106 @@ struct vertex_attr
 
 void hello_world_app::startup()
 {
-	model_obj model("../asset/african_head/african_head.obj");
-	std::vector<vertex_attr> vertex_data;
-	for (size_t i = 0; i < model.nfaces(); ++i)
+	renderer_.initialize();
+
+	// 顶点数据
 	{
-		for (size_t j = 0; j < 3; ++j)
+		model_obj model("../asset/african_head/african_head.obj");
+		std::vector<vertex_attr> vertex_data;
+		for (size_t i = 0; i < model.nfaces(); ++i)
 		{
-			vertex_attr attr;
-			DirectX::XMStoreFloat3(&attr.pos, model.vert(i, j));
-			vertex_data.push_back(attr);
+			for (size_t j = 0; j < 3; ++j)
+			{
+				vertex_attr attr;
+				DirectX::XMStoreFloat3(&attr.pos, model.vert(i, j));
+				vertex_data.push_back(attr);
+			}
 		}
+
+		uint32_t byte_size = uint32_t(vertex_data.size() * sizeof(vertex_attr));
+
+		upload_buffer geo_buffer;
+		geo_buffer.create(L"Geometry Upload Buffer", byte_size);
+		void* uploadMem = geo_buffer.map();
+		memcpy(uploadMem, &vertex_data[0], byte_size);
+		geo_buffer.unmap(0);
+
+		m_GeometryBuffer.create(L"Geometry Buffer", byte_size, 1, geo_buffer);
+		m_VertexBufferView = m_GeometryBuffer.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
 	}
 
-	uint32_t byte_size = uint32_t(vertex_data.size() * sizeof(vertex_attr));
+	// PSO
+	{
+		// 
+		D3D12_RASTERIZER_DESC rasterizer_desc;	// Counter-clockwise
+		rasterizer_desc.FillMode = D3D12_FILL_MODE_WIREFRAME;
+		rasterizer_desc.CullMode = D3D12_CULL_MODE_BACK;
+		rasterizer_desc.FrontCounterClockwise = TRUE;
+		rasterizer_desc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
+		rasterizer_desc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
+		rasterizer_desc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
+		rasterizer_desc.DepthClipEnable = TRUE;
+		rasterizer_desc.MultisampleEnable = FALSE;
+		rasterizer_desc.AntialiasedLineEnable = FALSE;
+		rasterizer_desc.ForcedSampleCount = 0;
+		rasterizer_desc.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF;
 
-	upload_buffer geo_buffer;
-	geo_buffer.create(L"Geometry Upload Buffer", byte_size);
-	void* uploadMem = geo_buffer.map();
-	memcpy(uploadMem, &vertex_data[0], byte_size);
-	geo_buffer.unmap(0);
+		// 
+		D3D12_BLEND_DESC alphaBlend = {};
+		alphaBlend.IndependentBlendEnable = FALSE;
+		alphaBlend.RenderTarget[0].BlendEnable = TRUE;
+		alphaBlend.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		alphaBlend.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		alphaBlend.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		alphaBlend.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+		alphaBlend.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+		alphaBlend.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+		alphaBlend.RenderTarget[0].RenderTargetWriteMask = 0;
+		alphaBlend.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-	m_GeometryBuffer.create(L"Geometry Buffer", byte_size, 1, geo_buffer);
-	m_VertexBuffer = m_GeometryBuffer.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
+		// 
+		D3D12_DEPTH_STENCIL_DESC DepthStateReadWrite = {};
+		DepthStateReadWrite.DepthEnable = FALSE;
+		DepthStateReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+		DepthStateReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+		DepthStateReadWrite.StencilEnable = FALSE;
+		DepthStateReadWrite.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+		DepthStateReadWrite.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+		DepthStateReadWrite.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+		DepthStateReadWrite.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+		DepthStateReadWrite.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+		DepthStateReadWrite.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+		DepthStateReadWrite.BackFace = DepthStateReadWrite.FrontFace;
+		DepthStateReadWrite.DepthEnable = TRUE;
+		DepthStateReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+		DepthStateReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+
+		// VS输入顶点格式
+		D3D12_INPUT_ELEMENT_DESC vs_vertex_input_fmt[] =
+		{
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		};
+
+		DXGI_FORMAT color_format = get_rhi()->buffer_manager_.scene_color_buffer->get_format();
+		DXGI_FORMAT depth_format = get_rhi()->buffer_manager_.scene_depth_buffer->get_format();
+
+		m_HelloWorldPSO.reset(new graphics_pso(L"HelloWorldPSO"));
+		m_HelloWorldPSO->set_root_signature(renderer_.get_root_signature());
+		m_HelloWorldPSO->set_rasterizer_state(rasterizer_desc);
+		m_HelloWorldPSO->set_blend_state(alphaBlend);
+		m_HelloWorldPSO->set_depth_stencil_state(DepthStateReadWrite);
+		m_HelloWorldPSO->set_input_layout(_countof(vs_vertex_input_fmt), vs_vertex_input_fmt);
+		m_HelloWorldPSO->set_primitive_topology_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+		m_HelloWorldPSO->set_render_target_formats(1, &color_format, depth_format);
+		m_HelloWorldPSO->set_vertex_shader(hello_world_vs_cso, sizeof(hello_world_vs_cso));
+		m_HelloWorldPSO->set_pixel_shader(hello_world_ps_cso, sizeof(hello_world_ps_cso));
+		m_HelloWorldPSO->finalize();
+	}
 }
 
 void hello_world_app::cleanup()
 {
+	renderer_.shutdown();
 }
 
 void hello_world_app::update(float delta_time)

@@ -1,10 +1,10 @@
 #pragma once
 
 #include "core/pch.h"
+#include "core/root_signature.h"
 #include <memory>
 
 class graphics_pso;
-class root_signature;
 
 /*
 ===============================================================================
@@ -15,6 +15,8 @@ class renderer
 public:
 	int initialize();
 	void shutdown();
+
+	root_signature* get_root_signature() const { return root_signature_.get(); }
 
 private:
 	void initialize_common_state();

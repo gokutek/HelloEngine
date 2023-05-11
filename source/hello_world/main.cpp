@@ -12,7 +12,7 @@ static bool start_unit_test()
 	ASSERT(HighBit == 7);
 
 	//new长度为0的数组，不会崩溃。
-	auto* p = new std::string[0];
+	auto* p = new int[0];
 	delete[] p;
 
 	//32位与64位进行异或
