@@ -29,7 +29,7 @@ void hello_world_app::startup()
 		}
 	}
 
-	size_t byte_size = vertex_data.size() * sizeof(vertex_attr);
+	uint32_t byte_size = uint32_t(vertex_data.size() * sizeof(vertex_attr));
 
 	upload_buffer geo_buffer;
 	geo_buffer.create(L"Geometry Upload Buffer", byte_size);
