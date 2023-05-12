@@ -24,6 +24,7 @@ private:
 	byte_address_buffer m_GeometryBuffer;
 	D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView;
 	D3D12_INDEX_BUFFER_VIEW m_IndexBuffer;
+	uint32_t vertex_count_;
 
 	std::unique_ptr<graphics_pso> m_HelloWorldPSO;
 };

@@ -231,7 +231,10 @@ void graphics_context::draw_indexed(uint32_t index_count, uint32_t start_index_l
 
 void graphics_context::draw_instanced(uint32_t vertex_count_per_instance, uint32_t instance_count, uint32_t start_vertex_location, uint32_t start_instance_location)
 {
-	assert(false && "unimpl yet!");
+	flush_resource_barriers();
+	dynamic_view_descriptor_heap_.commit_graphics_root_descriptor_tables(rhi_command_list_);
+	dynamic_sampler_descriptor_heap_.commit_graphics_root_descriptor_tables(rhi_command_list_);
+	rhi_command_list_->DrawInstanced(vertex_count_per_instance, instance_count, start_vertex_location, start_instance_location);
 }
 
 void graphics_context::draw_indexed_instanced(uint32_t index_count_per_instance, uint32_t instance_count, uint32_t start_index_location, uint32_t base_vertex_location, uint32_t start_instance_location)

@@ -33,7 +33,8 @@ void hello_world_app::startup()
 			}
 		}
 
-		uint32_t byte_size = uint32_t(vertex_data.size() * sizeof(vertex_attr));
+		vertex_count_ = (uint32_t)vertex_data.size();
+		uint32_t byte_size = uint32_t(vertex_count_ * sizeof(vertex_attr));
 
 		upload_buffer geo_buffer;
 		geo_buffer.create(L"Geometry Upload Buffer", byte_size);
@@ -147,7 +148,14 @@ void hello_world_app::render_scene()
 	context->set_viewport_and_scissor(viewport, scissor);
 	context->clear_color(*back_buffer, nullptr);
 
-	//TODO:绘制三角形
+	//TODO:绘制模型
+	context->set_pipeline_state(*m_HelloWorldPSO);
+	//context->SetRootSignature(Renderer::m_RootSig);
+	//context->SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, Renderer::s_TextureHeap.GetHeapPointer());
+	//context->set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->set_index_buffer(m_IndexBuffer);
+	context->set_vertex_buffer(0, m_VertexBufferView);
+	context->draw(vertex_count_, 0);
 
 	context->transition_resource(*back_buffer, D3D12_RESOURCE_STATE_PRESENT, false);
 
