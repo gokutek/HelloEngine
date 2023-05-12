@@ -145,6 +145,11 @@ void command_context::copy_sub_resource(gpu_resource& dest, UINT dest_sub_index,
 	assert(false && "unimpl yet!");
 }
 
+void command_context::copy_counter(gpu_resource& dest, size_t dest_offset, structured_buffer& src)
+{
+	assert(false && "unimpl yet!");
+}
+
 void command_context::copy_texture_region(gpu_resource& dest, UINT x, UINT y, UINT z, gpu_resource& source, RECT& rect)
 {
 	assert(false && "unimpl yet!");

@@ -6,6 +6,7 @@
 #include "dynamic_descriptor_heap.h"
 #include "linear_allocator.h"
 #include "upload_buffer.h"
+#include "structured_buffer.h"
 #include "pso.h"
 #include <stdint.h>
 #include <string>
@@ -95,7 +96,13 @@ public:
 	 */
 	void copy_sub_resource(gpu_resource& dest, UINT dest_sub_index, gpu_resource& src, UINT src_sub_index);
 
-	//void copy_counter(gpu_resource& dest, size_t dest_offset, StructuredBuffer& src);
+	/**
+	 * @brief 
+	 * @param dest 
+	 * @param dest_offset 
+	 * @param src 
+	*/
+	void copy_counter(gpu_resource& dest, size_t dest_offset, structured_buffer& src);
 
 	/**
 	 * @brief 
