@@ -55,7 +55,17 @@ void graphics_context::resolve_query_data(ID3D12QueryHeap* query_heap, D3D12_QUE
 
 void graphics_context::set_root_signature(root_signature const& root_sig)
 {
-	assert(false && "unimpl yet!");
+	if (root_sig.get_signature() == rhi_cur_graphics_root_signature_)
+	{
+		return;
+	}
+
+	rhi_cur_graphics_root_signature_ = root_sig.get_signature();
+	rhi_command_list_->SetGraphicsRootSignature(rhi_cur_graphics_root_signature_);
+
+	//TODO:
+	//dynamic_view_descriptor_heap_.ParseGraphicsRootSignature(RootSig);
+	//dynamic_sampler_descriptor_heap_.ParseGraphicsRootSignature(RootSig);
 }
 
 void graphics_context::set_render_targets(uint32_t count, D3D12_CPU_DESCRIPTOR_HANDLE const* rtv_array)

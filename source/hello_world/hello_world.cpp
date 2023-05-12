@@ -42,8 +42,8 @@ void hello_world_app::startup()
 		memcpy(uploadMem, &vertex_data[0], byte_size);
 		geo_buffer.unmap(0);
 
-		m_GeometryBuffer.create(L"Geometry Buffer", byte_size, 1, geo_buffer);
-		m_VertexBufferView = m_GeometryBuffer.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
+		vertex_buffer_.create(L"Geometry Buffer", byte_size, 1, geo_buffer);
+		m_VertexBufferView = vertex_buffer_.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
 	}
 
 	// PSO
@@ -52,7 +52,7 @@ void hello_world_app::startup()
 		D3D12_RASTERIZER_DESC rasterizer_desc;	// Counter-clockwise
 		rasterizer_desc.FillMode = D3D12_FILL_MODE_WIREFRAME;
 		rasterizer_desc.CullMode = D3D12_CULL_MODE_BACK;
-		rasterizer_desc.FrontCounterClockwise = TRUE;
+		rasterizer_desc.FrontCounterClockwise = FALSE;
 		rasterizer_desc.DepthBias = D3D12_DEFAULT_DEPTH_BIAS;
 		rasterizer_desc.DepthBiasClamp = D3D12_DEFAULT_DEPTH_BIAS_CLAMP;
 		rasterizer_desc.SlopeScaledDepthBias = D3D12_DEFAULT_SLOPE_SCALED_DEPTH_BIAS;
@@ -78,28 +78,16 @@ void hello_world_app::startup()
 		// 
 		D3D12_DEPTH_STENCIL_DESC DepthStateReadWrite = {};
 		DepthStateReadWrite.DepthEnable = FALSE;
-		DepthStateReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-		DepthStateReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 		DepthStateReadWrite.StencilEnable = FALSE;
-		DepthStateReadWrite.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
-		DepthStateReadWrite.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
-		DepthStateReadWrite.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-		DepthStateReadWrite.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
-		DepthStateReadWrite.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
-		DepthStateReadWrite.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
-		DepthStateReadWrite.BackFace = DepthStateReadWrite.FrontFace;
-		DepthStateReadWrite.DepthEnable = TRUE;
-		DepthStateReadWrite.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-		DepthStateReadWrite.DepthFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
 
 		// VS输入顶点格式
 		D3D12_INPUT_ELEMENT_DESC vs_vertex_input_fmt[] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		};
 
-		DXGI_FORMAT color_format = get_rhi()->buffer_manager_.scene_color_buffer->get_format();
-		DXGI_FORMAT depth_format = get_rhi()->buffer_manager_.scene_depth_buffer->get_format();
+		DXGI_FORMAT color_format = DXGI_FORMAT_R10G10B10A2_UNORM;// get_rhi()->buffer_manager_.scene_color_buffer->get_format();
+		DXGI_FORMAT depth_format = DXGI_FORMAT_UNKNOWN;// get_rhi()->buffer_manager_.scene_depth_buffer->get_format();
 
 		m_HelloWorldPSO.reset(new graphics_pso(L"HelloWorldPSO"));
 		m_HelloWorldPSO->set_root_signature(renderer_.get_root_signature());
@@ -147,13 +135,12 @@ void hello_world_app::render_scene()
 	context->transition_resource(*back_buffer, D3D12_RESOURCE_STATE_RENDER_TARGET, false);
 	context->set_viewport_and_scissor(viewport, scissor);
 	context->clear_color(*back_buffer, nullptr);
-
-	//TODO:绘制模型
+	context->set_render_targets(1, &back_buffer->get_rtv());
+	
+	// 绘制模型
 	context->set_pipeline_state(*m_HelloWorldPSO);
-	//context->SetRootSignature(Renderer::m_RootSig);
-	//context->SetDescriptorHeap(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, Renderer::s_TextureHeap.GetHeapPointer());
-	//context->set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->set_index_buffer(m_IndexBuffer);
+	context->set_root_signature(*renderer_.get_root_signature());
+	context->set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	context->set_vertex_buffer(0, m_VertexBufferView);
 	context->draw(vertex_count_, 0);
 
