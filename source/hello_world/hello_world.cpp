@@ -43,7 +43,7 @@ void hello_world_app::startup()
 		geo_buffer.unmap(0);
 
 		vertex_buffer_.create(L"Geometry Buffer", byte_size, 1, geo_buffer);
-		m_VertexBufferView = vertex_buffer_.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
+		vertex_buffer_view_ = vertex_buffer_.vertex_buffer_view(0, byte_size, sizeof(vertex_attr));
 	}
 
 	// PSO
@@ -89,17 +89,17 @@ void hello_world_app::startup()
 		DXGI_FORMAT color_format = DXGI_FORMAT_R10G10B10A2_UNORM;// get_rhi()->buffer_manager_.scene_color_buffer->get_format();
 		DXGI_FORMAT depth_format = DXGI_FORMAT_UNKNOWN;// get_rhi()->buffer_manager_.scene_depth_buffer->get_format();
 
-		m_HelloWorldPSO.reset(new graphics_pso(L"HelloWorldPSO"));
-		m_HelloWorldPSO->set_root_signature(renderer_.get_root_signature());
-		m_HelloWorldPSO->set_rasterizer_state(rasterizer_desc);
-		m_HelloWorldPSO->set_blend_state(alphaBlend);
-		m_HelloWorldPSO->set_depth_stencil_state(DepthStateReadWrite);
-		m_HelloWorldPSO->set_input_layout(_countof(vs_vertex_input_fmt), vs_vertex_input_fmt);
-		m_HelloWorldPSO->set_primitive_topology_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-		m_HelloWorldPSO->set_render_target_formats(1, &color_format, depth_format);
-		m_HelloWorldPSO->set_vertex_shader(hello_world_vs_cso, sizeof(hello_world_vs_cso));
-		m_HelloWorldPSO->set_pixel_shader(hello_world_ps_cso, sizeof(hello_world_ps_cso));
-		m_HelloWorldPSO->finalize();
+		hello_world_pso_.reset(new graphics_pso(L"HelloWorldPSO"));
+		hello_world_pso_->set_root_signature(renderer_.get_root_signature());
+		hello_world_pso_->set_rasterizer_state(rasterizer_desc);
+		hello_world_pso_->set_blend_state(alphaBlend);
+		hello_world_pso_->set_depth_stencil_state(DepthStateReadWrite);
+		hello_world_pso_->set_input_layout(_countof(vs_vertex_input_fmt), vs_vertex_input_fmt);
+		hello_world_pso_->set_primitive_topology_type(D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+		hello_world_pso_->set_render_target_formats(1, &color_format, depth_format);
+		hello_world_pso_->set_vertex_shader(hello_world_vs_cso, sizeof(hello_world_vs_cso));
+		hello_world_pso_->set_pixel_shader(hello_world_ps_cso, sizeof(hello_world_ps_cso));
+		hello_world_pso_->finalize();
 	}
 }
 
@@ -138,10 +138,10 @@ void hello_world_app::render_scene()
 	context->set_render_targets(1, &back_buffer->get_rtv());
 	
 	// 绘制模型
-	context->set_pipeline_state(*m_HelloWorldPSO);
+	context->set_pipeline_state(*hello_world_pso_);
 	context->set_root_signature(*renderer_.get_root_signature());
 	context->set_primitive_topology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	context->set_vertex_buffer(0, m_VertexBufferView);
+	context->set_vertex_buffer(0, vertex_buffer_view_);
 	context->draw(vertex_count_, 0);
 
 	context->transition_resource(*back_buffer, D3D12_RESOURCE_STATE_PRESENT, false);

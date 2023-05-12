@@ -22,7 +22,7 @@ public:
 private:
 	renderer renderer_;
 	byte_address_buffer vertex_buffer_;
-	D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView;
+	D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view_;
 	uint32_t vertex_count_;
-	std::unique_ptr<graphics_pso> m_HelloWorldPSO;
+	std::unique_ptr<graphics_pso> hello_world_pso_;
 };

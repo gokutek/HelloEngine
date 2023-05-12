@@ -79,10 +79,9 @@ int graphics::init_device(bool RequireDXRSupport)
 #endif
 	}
 
-	// Obtain the DXGI factory
+	// 这里先创建IDXGIFactory2，通过它再去查询IDXGIFactory7。若直接创建IDXGIFactory7，图形调试崩溃。
 	ComPtr<IDXGIFactory2> dxgiFactory2;
 	ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&dxgiFactory2)));
-
 	ComPtr<IDXGIFactory7> dxgiFactory;
 	dxgiFactory2->QueryInterface(IID_PPV_ARGS(&dxgiFactory));
 
@@ -115,7 +114,7 @@ int graphics::init_device(bool RequireDXRSupport)
 				continue;
 
 			// Can create a D3D12 device?
-			if (FAILED(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&pDevice))))
+			if (FAILED(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_12_2, IID_PPV_ARGS(&pDevice))))
 				continue;
 
 			// Does support DXR if required?
@@ -150,7 +149,7 @@ int graphics::init_device(bool RequireDXRSupport)
 		else
 			utility::Print("Failed to find a hardware adapter.  Falling back to WARP.\n");
 		ASSERT_SUCCEEDED(dxgiFactory->EnumWarpAdapter(IID_PPV_ARGS(&pAdapter)));
-		ASSERT_SUCCEEDED(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&pDevice)));
+		ASSERT_SUCCEEDED(D3D12CreateDevice(pAdapter.Get(), D3D_FEATURE_LEVEL_12_2, IID_PPV_ARGS(&pDevice)));
 		graphics::device = pDevice.Detach();
 	}
 	else
