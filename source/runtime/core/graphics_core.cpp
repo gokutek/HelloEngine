@@ -80,8 +80,11 @@ int graphics::init_device(bool RequireDXRSupport)
 	}
 
 	// Obtain the DXGI factory
-	ComPtr<IDXGIFactory6> dxgiFactory;
-	ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&dxgiFactory)));
+	ComPtr<IDXGIFactory2> dxgiFactory2;
+	ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&dxgiFactory2)));
+
+	ComPtr<IDXGIFactory7> dxgiFactory;
+	dxgiFactory2->QueryInterface(IID_PPV_ARGS(&dxgiFactory));
 
 	// Create the D3D graphics device
 	ComPtr<IDXGIAdapter1> pAdapter;
@@ -89,7 +92,7 @@ int graphics::init_device(bool RequireDXRSupport)
 	uint32_t bUseWarpDriver = false;
 	CommandLineArgs::GetInteger(L"warp", bUseWarpDriver);
 
-	uint32_t desiredVendor = VENDOR_ID_NVIDIA;
+	uint32_t desiredVendor = 0;
 
 	// Temporary workaround because SetStablePowerState() is crashing
 	D3D12EnableExperimentalFeatures(0, nullptr, nullptr, nullptr);
