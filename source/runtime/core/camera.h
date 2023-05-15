@@ -3,3 +3,7 @@
 /**
  * @brief TODO:
  */
+class camera
+{
+public:
+};

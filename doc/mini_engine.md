@@ -146,3 +146,8 @@ cbuffer GlobalConstants : register(b1)
 graphic command list
 dynamic heap alloc
 Resource是如何与hlsl中的寄存器建立关联的？
+
+# TODO
+* 线框模式；
+* camera及其控制；
+* 支持纹理映射；
